@@ -3,8 +3,8 @@ ifndef XC_HOME
     $(error "Please run 'source ./bin/source.me.sh' to setup the project workspace")
 endif
 
-PARSE_OPCODES = $(XC_HOME)/bin/ise-parse-opcodes.py
-OPCODES_SPEC  = $(XC_HOME)/docs/ise-opcodes.txt
+PARSE_OPCODES = $(XC_HOME)/external/riscv-opcodes/parse-opcodes
+OPCODES_SPEC  = $(XC_HOME)/external/riscv-opcodes/opcodes-xcrypto
 RTL_DECODER   = $(XC_WORK)/ise_decode.v
 
 UNIT_TESTS    = $(shell find . -path "./work/unit/*.hex")
@@ -91,7 +91,7 @@ $(XC_WORK)/spike-gen.h: ./bin/ise-parse-opcodes.py ./docs/ise-opcodes.txt
 .PHONY: rtl_decoder
 rtl_decoder: $(RTL_DECODER)
 $(RTL_DECODER) : $(OPCODES_SPEC) $(PARSE_OPCODES)
-	cat $< | $(PARSE_OPCODES) -verilog > $@
+	cat $< | python3 $(PARSE_OPCODES) -verilog > $@
 
 
 #

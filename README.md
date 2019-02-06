@@ -1,10 +1,11 @@
-# XCrypto: a cryptographic ISE for RISC-V
+# The XCrypto reference hardware implementation
 
-*This project describes a complete Instruction Set Extension (ISE) for the
-RISC-V architecture for accelerating cryptographic workloads. It is
-accompanied by an area-optimised implementation of the ISE, which acts as
-a co-processor. An example integration of the co-processor with the PicoRV32
-CPU core is included.*
+*This project contains an area-optimised implementation of the
+[XCrypto ISE](https://github.com/scarv/xcrypto),
+a general-purpose cryptographic instruction set
+extension for the [RISC-V](https://riscv.org/)
+architecture. The design can be attatched as a co-processor
+to existing RISC-V CPU designs.*
 
 **Contents**
 
@@ -20,8 +21,8 @@ CPU core is included.*
 ## Getting Started
 
 **The best place to start** getting a feel for what XCrypto does is to look
-at the specification documents on the releases page
-[here](https://github.com/scarv/xcrypto/releases).
+at the specification documents in the 
+[xcrypto-spec](https://github.com/scarv/xcrypto-spec) repository.
 These explain both the ISE itself, the instructions and how to program it.
 They also describe the reference implementation we have constructed for
 evaluating the ISE with existing RISC-V cores.
@@ -44,10 +45,9 @@ testbench.
 
 Build the documentation by running `make docs`
 
-- The ISE specification will be found in `${XC_HOME}/docs/specification.pdf`
 - Documentation on the *reference implementation* of the ISE willl be found
   in `${XC_HOME}/docs/implementation.pdf`.
-- Pre-built documentation for the specification and implementation can
+- Pre-built documentation for the reference implementation can
   be found on the [releases](https://github.com/scarv/xcrypto/releases) page.
 
 Depending on how Yosys is installed, one should also set the `YS_INSTALL`
@@ -60,10 +60,10 @@ environment variable such that `${YS_INSTALL}/yosys` is a valid path to the
 ├── bin                     - Tool/environment setup scripts
 ├── docs                    - Project documentation
 │   ├── diagrams
-│   ├── implementation      - Reference implementation documentation
-│   └── specification       - ISE Specification document
+│   └── implementation      - Reference implementation document
 ├── examples
 │   ├── common              - Shared files between examples
+│   ├── ...                 - Multiple cryptographic algorithm examples
 │   └── integration-test    - "Hello World" example integration program
 ├── external                - External repositories
 │   ├── libscarv            - Reference software implementation examples
@@ -85,25 +85,21 @@ environment variable such that `${YS_INSTALL}/yosys` is a valid path to the
 └── work                    - Working directory for generated artifacts
 ```
 
-### Setting Up binutils
+### Setting Up A Toolchain
 
-You will need a customised version of GNU Binutils in order to compile
-software which uses the Crypto ISE. We modified version 2.30 of GNU
-binutils, and store a patch in `external/`. 
+You will need our customised version of the RISC-V toolchain in order
+to build programs using XCrypto.
+Currently, we support only writing in assembly code.
 
-Use the script `bin/setup-binutils.sh` as below to download, configure
-and build the modified toolset.
+The toolchain itself can be obtained from
+[scarv/riscv-tools](https://github.com/scarv/riscv-tools),
+and the installation guide there will be enough to get you up and
+running.
 
-```sh
-$> cd ${XC_HOME}
-$> source bin/setup-binutils.sh
-```
-
-You will end up with `as-new` in 
-`${XC_HOME}/work/riscv-binutils-gdb/build/gas`. This is the assembler to use.
-
-Other programs like `ld`/`gold` and `objdump` are in
-`${XC_HOME}/work/riscv-binutils-gdb/build/binutils`.
+It is essential that your `$RISCV` environment variable is set to
+point at the XCrypto augmented toolchain installation linked too
+above. Not at an existing, standard RISC-V toolchain you might
+already have installed.
 
 ### Running Simulations
 

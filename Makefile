@@ -66,13 +66,6 @@ clean: libscarv-clean benchmarks-clean
 	$(MAKE) -C $(XC_HOME)/flow/yosys clean
 	rm -f $(RTL_DECODER)
 
-#
-# Builds the RISC-V binutils with the patch applied to support assembly 
-# of the ISE instructions.
-#
-binutils-gen: $(XC_WORK)/binutils-gen.h
-$(XC_WORK)/binutils-gen.h: ./bin/ise-parse-opcodes.py ./docs/ise-opcodes.txt
-	cat ./docs/ise-opcodes.txt | ./bin/ise-parse-opcodes.py -c > $@
 
 #
 # Generates code needed for SPIKE instruction declaration.

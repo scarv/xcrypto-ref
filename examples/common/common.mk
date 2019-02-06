@@ -9,11 +9,11 @@ all: $(EXE) $(EXE:%.elf=%.dis) $(EXE:%.elf=%.hex) $(EXE:%.elf=%.srec)
 
 $(TGT_DIR)/%.o : %.x.S
 	-mkdir -p $(TGT_DIR)
-	$(X_AS) $(ASFLAGS) $(INC_DIRS) -c -o $@ $^
+	$(AS) $(ASFLAGS) $(INC_DIRS) -c -o $@ $^
 
 $(TGT_DIR)/%.o : ../common/%.S
 	-mkdir -p $(TGT_DIR)
-	$(X_AS) $(ASFLAGS) $(INC_DIRS) -c -o $@ $^
+	$(AS) $(ASFLAGS) $(INC_DIRS) -c -o $@ $^
 
 $(TGT_DIR)/%.o: ../common/%.c
 	-mkdir -p $(TGT_DIR)
@@ -21,11 +21,11 @@ $(TGT_DIR)/%.o: ../common/%.c
 
 $(TGT_DIR)/%.dis : $(TGT_DIR)/%.elf
 	-mkdir -p $(TGT_DIR)
-	$(X_OBJDUMP) -j.text -j.data -dt $< > $@
+	$(OBJDUMP) -j.text -j.data -dt $< > $@
 
 $(TGT_DIR)/%.srec : $(TGT_DIR)/%.elf
 	-mkdir -p $(TGT_DIR)
-	$(X_OBJCOPY) -O srec --srec-forceS3 $< $@
+	$(OBJCOPY) -O srec --srec-forceS3 $< $@
 
 $(TGT_DIR)/$(TEST_NAME).o: $(TEST_NAME).c $(HEADERS)
 	-mkdir -p $(TGT_DIR)
@@ -35,7 +35,7 @@ $(TGT_DIR)/$(TEST_NAME).elf : $(OBJECTS)
 	$(CC)  $(LDFLAGS) $(CFLAGS) -o $@ $^
 
 $(TGT_DIR)/%.hex : $(TGT_DIR)/%.elf
-	$(X_OBJDUMP) -D -j.text $< | grep -P ":\t" > $@
+	$(OBJDUMP) -D -j.text $< | grep -P ":\t" > $@
 	sed -i 's/     .*$///' $@
 	sed -i 's/^.*:\t//' $@
 

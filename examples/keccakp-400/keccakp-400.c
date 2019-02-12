@@ -3,7 +3,7 @@
 #include "common.h"
 #include "benchmark.h"
 
-#include "scarv/KeccakP-400-SnP.h"
+#include "scarv/keccak/KeccakP-400-SnP.h"
 
 void rand_init_state(tKeccak400Lane * state) {
     for(int i = 0; i < KeccakP400_stateSizeInBytes/2; i ++) {

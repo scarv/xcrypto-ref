@@ -42,10 +42,10 @@ examples: libscarv
 
 .PHONY: libscarv
 libscarv: 
-	$(MAKE) -C $(LIBSCARV) -f Makefile.arch-$(LIBSCARV_ARCH) objects lib
+	$(MAKE) -C $(LIBSCARV) ARCH=$(LIBSCARV_ARCH) all
 
 libscarv-clean:
-	$(MAKE) -C $(LIBSCARV) -f Makefile.arch-$(LIBSCARV_ARCH) spotless
+	$(MAKE) -C $(LIBSCARV) ARCH=$(LIBSCARV_ARCH) clean
 
 
 .PHONY: benchmarks

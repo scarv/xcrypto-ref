@@ -2,7 +2,7 @@
 #include "common.h"
 #include "benchmark.h"
 
-#include "scarv/sha2_256.h"
+#include "scarv/sha2/sha2_256.h"
 
 void dump_bytes(uint8_t * b, uint32_t len) {
     putstr("'");

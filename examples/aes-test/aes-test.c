@@ -2,8 +2,8 @@
 #include "common.h"
 #include "benchmark.h"
 
-#include <scarv/aes_enc.h> 
-#include <scarv/aes_dec.h> 
+#include <scarv/aes/aes_enc.h> 
+#include <scarv/aes/aes_dec.h> 
 
 extern void aes_enc_sub_gather( uint8_t* s, uint8_t* sbox	   );
   

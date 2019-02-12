@@ -2,7 +2,7 @@
 TEST_NAME=aes-test
 OBJECTS  = $(TGT_DIR)/$(TEST_NAME).o \
            $(TGT_DIR)/boot.o \
-           $(LIBSCARV)/build/lib/libscarv.a
+           $(LIBSCARV_A)
 
 CONF += -DCONF_AES_PRECOMP_RC 
 CONF += -DCONF_AES_PRECOMP_RK

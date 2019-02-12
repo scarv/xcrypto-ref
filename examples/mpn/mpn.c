@@ -2,8 +2,8 @@
 #include "common.h"
 #include "benchmark.h"
 
-#include "scarv/mpn.h"
-#include "scarv/limb.h"
+#include "scarv/mp/mpn.h"
+#include "scarv/mp/limb.h"
 
 
 int test_mpn_rand( limb_t* r, int l_min, int l_max ) {

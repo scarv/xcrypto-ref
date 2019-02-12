@@ -2,7 +2,7 @@
 #include "common.h"
 #include "benchmark.h"
 
-#include "scarv/prince.h"
+#include "scarv/prince/prince.h"
 
 uint64_t prince_test_vectors[][4] = {
 // plaintext       ,  k0              ,  k1              ,  cipher

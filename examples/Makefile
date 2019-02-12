@@ -1,19 +1,23 @@
 
 
-export CC       = $(RISCV)/bin/riscv64-unknown-elf-gcc
-export AS       = $(RISCV)/bin/riscv64-unknown-elf-as
-export LD       = $(RISCV)/bin/riscv64-unknown-elf-ld
-export OBJDUMP  = $(RISCV)/bin/riscv64-unknown-elf-objdump
-export OBJCOPY  = $(RISCV)/bin/riscv64-unknown-elf-objcopy
+export CC       = $(RISCV)/bin/riscv32-unknown-elf-gcc
+export AS       = $(RISCV)/bin/riscv32-unknown-elf-as
+export LD       = $(RISCV)/bin/riscv32-unknown-elf-ld
+export OBJDUMP  = $(RISCV)/bin/riscv32-unknown-elf-objdump
+export OBJCOPY  = $(RISCV)/bin/riscv32-unknown-elf-objcopy
 
-export INC_DIR  = -I$(XC_HOME)/examples/common -I$(LIBSCARV)/build/include
+export INC_DIR  = -I$(XC_HOME)/examples/common \
+                  -I$(LIBSCARV)/build/$(LIBSCARV_ARCH)/include \
+                  -I$(LIBSCARV)/build/$(LIBSCARV_ARCH)/include/scarv
 
-export ASFLAGS  += -march=rv32imx -mabi=ilp32 
+export ASFLAGS  += -march=rv32imax -mabi=ilp32 
 
 export CFLAGS   += -mabi=ilp32 -march=rv32im -O2 -Wall $(INC_DIR) \
                   -nostartfiles -nostdlib
 
 export LDSCRIPT ?= $(XC_HOME)/examples/common/linker.ld
+
+export LIBSCARV_A = $(LIBSCARV)/build/$(LIBSCARV_ARCH)/lib/libscarv.a
 
 export LDFLAGS  += -T$(LDSCRIPT)
 

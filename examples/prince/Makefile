@@ -3,6 +3,6 @@
 TEST_NAME=prince
 OBJECTS  = $(TGT_DIR)/$(TEST_NAME).o \
            $(TGT_DIR)/boot.o \
-           $(LIBSCARV)/build/lib/libscarv.a
+           $(LIBSCARV_A)
 
 include ../common/common.mk

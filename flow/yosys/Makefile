@@ -10,18 +10,18 @@ SRC_RTL     ?= $(shell find ../../ -path "*rtl/*.v") \
 	           $(shell find ../../ -path "*rtl/*.vh")
 SRC_VERIF   ?= $(shell find ../../ -path "*verif/*.vh") \
 	           $(shell find ../../ -path "*verif/*.v") 
-SRC_FORMAL  ?= $(XC_HOME)/verif/tb/tb_formal.v \
-               $(XC_HOME)/verif/formal/fml_pack_widths.vh \
-               $(XC_HOME)/verif/formal/fml_common.vh \
-               $(XC_HOME)/verif/formal/fml_top.v
+SRC_FORMAL  ?= $(REPO_HOME)/verif/tb/tb_formal.v \
+               $(REPO_HOME)/verif/formal/fml_pack_widths.vh \
+               $(REPO_HOME)/verif/formal/fml_common.vh \
+               $(REPO_HOME)/verif/formal/fml_top.v
 
-VLOG_out    = $(XC_HOME)/work/scarv_cop_top.v
+VLOG_out    = $(REPO_HOME)/work/scarv_cop_top.v
 
-LOG_SYNTH   = $(XC_HOME)/work/yosys-synth.log
-LOG_SMT2    = $(XC_HOME)/work/smt2/synthesis.log
+LOG_SYNTH   = $(REPO_HOME)/work/yosys-synth.log
+LOG_SMT2    = $(REPO_HOME)/work/smt2/synthesis.log
 
 SMTDIR          ?= $(XC_WORK)/smt2
-CHECKS_DIR       = $(XC_HOME)/verif/formal
+CHECKS_DIR       = $(REPO_HOME)/verif/formal
 
 FML_ENGINE      ?= boolector
 FML_CHECK_NAME  ?= correct_invalid_opcode_response \
@@ -55,7 +55,7 @@ adder       : ../../rtl/coprocessor/scarv_cop_palu_adder.v
 
 .PHONY: smt2
 smt2: $(SMT2_out)
-$(SMTDIR)/%.smt2 : $(XC_HOME)/verif/formal/fml_chk_%.v \
+$(SMTDIR)/%.smt2 : $(REPO_HOME)/verif/formal/fml_chk_%.v \
                    $(SRC_RTL) $(SRC_FORMAL)
 	@mkdir -p $(word 1, $(dir $(SMT2_out)))
 	$(YS) -qQT -l $@.log \

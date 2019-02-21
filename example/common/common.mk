@@ -1,5 +1,5 @@
 
-TGT_DIR  = $(XC_WORK)/examples
+TGT_DIR  = $(XC_WORK)/example
 
 EXE      ?= $(TGT_DIR)/$(TEST_NAME).elf
 

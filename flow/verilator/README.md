@@ -26,21 +26,21 @@ set appropriately.
 
 ## Building the model
 
-From the top of the repository (`$XC_HOME`), run the following commands:
+From the top of the repository (`$REPO_HOME`), run the following commands:
 
 ```sh
 $> make verilator_build
 ```
 
 This will create a simulation binary called `scarv_prv_xcrypt_top`
-in `$XC_HOME/work/verilator/`.
+in `$REPO_HOME/work/verilator/`.
 
 ## Running the model
 
 Get help about using the simulation binary thusly:
 
 ```sh
-$> $XC_HOME/work/verilator/scarv_prv_xcrypt_top --help
+$> $REPO_HOME/work/verilator/scarv_prv_xcrypt_top --help
 ../../work/verilator/scarv_prv_xcrypt_top [arguments]
     +q                            - Be quiet
 	+IMEM=<srec input file path>  -
@@ -85,7 +85,7 @@ objcopy -O srec --srec-forceS3 <input file> <output file>
 Note that you should use the objcopy associated with the modified binutils
 toolset in the Xcrypto repository. Assuming you have already built the
 patched binutils tools, this should be found in
-`$XC_HOME/work/riscv-binutils-gdb/build/binutils/objcopy`.
+`$REPO_HOME/work/riscv-binutils-gdb/build/binutils/objcopy`.
 
 ## Simulator output
 
@@ -95,7 +95,7 @@ which will print to STDOUT.
 Any *byte* writen to the memory address `0xFFFFFFFF` will be interpreted as
 an ASCII character and written to STDOUT.
 
-See `$XC_HOME/examples/common/boot.S` and `$XC_HOME/examples/common/common.h`
+See `$REPO_HOME/example/common/boot.S` and `$REPO_HOME/example/common/common.h`
 for how this is implemented.
 
 ## Performance Counters

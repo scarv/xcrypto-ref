@@ -11,7 +11,7 @@ SRC_RTL     ?= $(shell find ../../ -path "*rtl/coprocessor/*.v") \
 	           $(shell find ../../ -path "*rtl/coprocessor/*.vh") \
                $(shell find ../../ -path "*rtl/integration/*.v") \
 	           $(shell find ../../ -path "*rtl/integration/*.vh") \
-               $(XC_HOME)/external/picorv32/picorv32.v  \
+               $(REPO_HOME)/extern/picorv32/picorv32.v  \
 
 CPP_FILES   = vl_main.cpp srec.cpp
 
@@ -22,10 +22,10 @@ VL_FLAGS    ?= -Wall -top-module $(TOP_MODULE) \
 	            -Wno-style -Wno-fatal -O3 \
                 --trace --no-threads --noassert \
                 +define+NO_WAVE_DUMP=1+USE_VERILATOR_CLK_RESET=1 \
-                -I$(XC_HOME)/rtl/coprocessor \
-                -I$(XC_HOME)/work
+                -I$(REPO_HOME)/rtl/coprocessor \
+                -I$(REPO_HOME)/work
 
-WAVES_FILE  ?= $(XC_HOME)/work/verilator/vl_waves.vcd
+WAVES_FILE  ?= $(REPO_HOME)/work/verilator/vl_waves.vcd
 
 VERILATOR_TIMEOUT   ?= 300000
 VERILATOR_PASS_ADDR ?= 0xC000001C

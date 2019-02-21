@@ -4,8 +4,8 @@ OUT_DIR     ?= $(XC_WORK)/unit
 INPUTS      ?= $(shell find -name "*.S")
 OUTPUTS     ?= $(addprefix $(OUT_DIR)/, $(INPUTS:%.S=%.hex))
 
-AS           = $(XC_HOME)/work/riscv-binutils-gdb/build/gas/as-new
-OBJDUMP      = $(XC_HOME)/work/riscv-binutils-gdb/build/binutils/objdump
+AS           = $(REPO_HOME)/work/riscv-binutils-gdb/build/gas/as-new
+OBJDUMP      = $(REPO_HOME)/work/riscv-binutils-gdb/build/binutils/objdump
 
 all: $(OUTPUTS)
 

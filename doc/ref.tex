@@ -251,7 +251,7 @@ control the rate of information flow between the CPU and the COP.
 \end{tabular}
 \caption{Encodings for the \SIGREF{cop\_result} signal. All other encoding
 values are reserved and should not be used. These encodings are
-mapped to constants in {\tt \$XC\_HOME/rtl/coprocessor/scarv\_cop\_common.vh}}
+mapped to constants in {\tt \$REPO\_HOME/rtl/coprocessor/scarv\_cop\_common.vh}}
 \label{tab:cop-result-encodings}
 \end{table}
 
@@ -550,16 +550,16 @@ decoded output fields will be valid for every instruction.
 \caption{Encodings for the \SIGREF{id\_class} signal. All other encoding
 values are reserved and should not be used.
 These encodings are mapped to constants in
-{\tt \$XC\_HOME/rtl/coprocessor/scarv\_cop\_common.vh}}
+{\tt \$REPO\_HOME/rtl/coprocessor/scarv\_cop\_common.vh}}
 \label{tab:id-class-encodings}
 \end{table}
 
 The actual instruction decode logic is contained in
-{\tt \$XC\_HOME/work/ise\_decode.v}.
+{\tt \$REPO\_HOME/work/ise\_decode.v}.
 This is a file generated automatically from
-{\tt \$XC\_HOME/docs/ise\_opcodes.txt}
+{\tt \$REPO\_HOME/docs/ise\_opcodes.txt}
 by
-{\tt \$XC\_HOME/bin/ise-parse-opcodes.py}.
+{\tt \$REPO\_HOME/bin/ise-parse-opcodes.py}.
 The generated file is pulled into the design using a {\tt `include}
 preprocessor statement.
 

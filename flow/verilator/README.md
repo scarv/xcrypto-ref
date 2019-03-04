@@ -33,15 +33,15 @@ $> make verilator_build
 ```
 
 This will create a simulation binary called `scarv_prv_xcrypt_top`
-in `$REPO_HOME/work/verilator/`.
+in `$XC_WORK/verilator/`.
 
 ## Running the model
 
 Get help about using the simulation binary thusly:
 
 ```sh
-$> $REPO_HOME/work/verilator/scarv_prv_xcrypt_top --help
-../../work/verilator/scarv_prv_xcrypt_top [arguments]
+$> $XC_WORK/verilator/scarv_prv_xcrypt_top --help
+../../build/verilator/scarv_prv_xcrypt_top [arguments]
     +q                            - Be quiet
 	+IMEM=<srec input file path>  -
 	+STDOUT=<uart dump file path> -
@@ -85,7 +85,7 @@ objcopy -O srec --srec-forceS3 <input file> <output file>
 Note that you should use the objcopy associated with the modified binutils
 toolset in the Xcrypto repository. Assuming you have already built the
 patched binutils tools, this should be found in
-`$REPO_HOME/work/riscv-binutils-gdb/build/binutils/objcopy`.
+`$XC_WORK/riscv-binutils-gdb/build/binutils/objcopy`.
 
 ## Simulator output
 
@@ -108,3 +108,4 @@ Address     | Register
 ------------|------------------------------------------------------
 `0xFFFFFF00`| Memory load counter
 `0xFFFFFF04`| Memory store counter
+

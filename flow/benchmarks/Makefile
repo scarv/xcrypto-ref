@@ -1,6 +1,6 @@
 
-BWORK       = $(REPO_HOME)/work/benchmarks
-SREC_DIR    = $(REPO_HOME)/work/example
+BWORK       = $(XC_WORK)/benchmarks
+SREC_DIR    = $(XC_WORK)/example
 BLIB        = $(REPO_HOME)/flow/benchmarks/XCBenchmark.py
 
 BENCHMARKS  = mpn aes-test prince sha2 keccakp-1600 keccakp-400

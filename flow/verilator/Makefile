@@ -1,7 +1,7 @@
 
 ifndef VERILATOR_ROOT
     $(warning "Please set the VERILATOR_ROOT environment variable.")
-    $(warning "See $(XC_ROOT)/flow/verilator/README.md")
+    $(warning "See $(REPO_HOME)/flow/verilator/README.md")
     $(error   "Cannot continue without VERILATOR_ROOT")
 endif
 
@@ -23,9 +23,9 @@ VL_FLAGS    ?= -Wall -top-module $(TOP_MODULE) \
                 --trace --no-threads --noassert \
                 +define+NO_WAVE_DUMP=1+USE_VERILATOR_CLK_RESET=1 \
                 -I$(REPO_HOME)/rtl/coprocessor \
-                -I$(REPO_HOME)/work
+                -I$(XC_WORK)
 
-WAVES_FILE  ?= $(REPO_HOME)/work/verilator/vl_waves.vcd
+WAVES_FILE  ?= $(XC_WORK)/verilator/vl_waves.vcd
 
 VERILATOR_TIMEOUT   ?= 300000
 VERILATOR_PASS_ADDR ?= 0xC000001C

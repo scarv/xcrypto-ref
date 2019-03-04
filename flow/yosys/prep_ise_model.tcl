@@ -1,4 +1,7 @@
 
+# Import Yosys TCL commands
+yosys -import
+
 #
 # Prepares the ISE model for use with the formal flow by performing some
 # basic synthesis / lowering on it.
@@ -8,13 +11,13 @@
 #
 
 # Read in the design
-read_verilog -I../../work/ ../../verif/model/model_ise.v
+read_verilog -I$::env(XC_WORK) $::env(REPO_HOME)/verif/model/model_ise.v
 
 # Lower processes/tasks/functions to netlist level
-proc
+procs
 
 # Basic optimisation loop
 opt
 
 # Write out the synthesised verilog
-write_verilog ../../work/model_ise_prep.v
+write_verilog $::env(XC_WORK)/model_ise_prep.v

@@ -41,21 +41,21 @@ The synthesisable RTL for the example integration is split across three
 directories:
 
 \begin{enumerate}
-\item {\tt \$XC\_HOME/rtl/coprocessor} Contains all of the RTL dedicated
+\item {\tt \$REPO\_HOME/rtl/coprocessor} Contains all of the RTL dedicated
     to the \COP.
     This RTL will be required to create other custom integrations.
-\item {\tt \$XC\_HOME/rtl/integration} Contains all of the RTL dedicated
+\item {\tt \$REPO\_HOME/rtl/integration} Contains all of the RTL dedicated
     to the integration.
     Principally, it contains the glue logic for the
     sub-system top level, and the PCPI to \COP interface converter.
-\item {\tt \$XC\_HOME/external/picorv32/} Contains the {\tt picorv32.v}
+\item {\tt \$REPO\_HOME/external/picorv32/} Contains the {\tt picorv32.v}
     file, which has all of the logic for the PicoRV32 core in it.
 \end{enumerate}
 
 \subsubsection{Integration Testbench}
 
 All files for the integration testbench are found in 
-{\tt \$XC\_HOME/verif/tb}.
+{\tt \$REPO\_HOME/verif/tb}.
 
 The {\tt tb\_integration.v} file is the top-level testbench for the 
 subsystem.
@@ -118,7 +118,7 @@ $> make icarus_run_integ SIM_UNIT_TEST=<path to .hex file>
 Running {\tt make examples} will build a set of example programs which can
 be easily run within the integration testbench.
 
-Note that all tests under {\tt \$XC\_HOME/verif/unit} {\em can} be run
+Note that all tests under {\tt \$REPO\_HOME/verif/unit} {\em can} be run
 under the integration testbench, but they will fail out immediately
 as they are designed to be run with the functional verification testbench.
 
@@ -134,23 +134,23 @@ $> make yosys_synth
 
 \noindent
 Will create the netlist and put the result in 
-{\tt \$XC\_HOME/work/scarv\_cop\_top.v}.
+{\tt \$XC\_WORK/scarv\_cop\_top.v}.
 
 \noindent
 Extra report files include:
 \begin{itemize}
-\item {\tt \$XC\_HOME/work/yosys-synth.log} - 
+\item {\tt \$XC\_WORK/yosys-synth.log} - 
     The log file for the synthesis process.
-\item {\tt \$XC\_HOME/work/synth-statistics.rpt} - 
+\item {\tt \$XC\_WORK/synth-statistics.rpt} - 
     The number of yosys internal cells used to represent the design.
     This is useful to work out the relative impact on area of different
     changes, though designers must be mindful this does not represent
     final FPGA utilisation or ASIC cell usage.
-\item {\tt \$XC\_HOME/work/logic-loops.rpt} - 
+\item {\tt \$XC\_WORK/logic-loops.rpt} - 
     Contains reports on any logic loops found during the synthesis process.
     These must be removed before synthesis will complete.
 \end{itemize}
 
 \noindent
 The {\tt yosys} script used is very simple, and is found in
-{\tt \$XC\_HOME/flow/yosys/write-verilog.ys}.
+{\tt \$REPO\_HOME/flow/yosys/write-verilog.ys}.

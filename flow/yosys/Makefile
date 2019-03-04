@@ -2,7 +2,7 @@
 YS_INSTALL  ?= $(YOSYS_INSTALL)
 YS          ?= $(YS_INSTALL)/yosys
 YSMTBMC     ?= $(YS_INSTALL)/yosys-smtbmc
-YS_SCRIPT   ?= write-smt-tb.ys
+YS_SCRIPT   ?= write-smt-tb.tcl
 
 BMC_STEPS   ?= 10
 
@@ -15,10 +15,10 @@ SRC_FORMAL  ?= $(REPO_HOME)/verif/tb/tb_formal.v \
                $(REPO_HOME)/verif/formal/fml_common.vh \
                $(REPO_HOME)/verif/formal/fml_top.v
 
-VLOG_out    = $(REPO_HOME)/work/scarv_cop_top.v
+VLOG_out    = $(XC_WORK)/scarv_cop_top.v
 
-LOG_SYNTH   = $(REPO_HOME)/work/yosys-synth.log
-LOG_SMT2    = $(REPO_HOME)/work/smt2/synthesis.log
+LOG_SYNTH   = $(XC_WORK)/yosys-synth.log
+LOG_SMT2    = $(XC_WORK)/smt2/synthesis.log
 
 SMTDIR          ?= $(XC_WORK)/smt2
 CHECKS_DIR       = $(REPO_HOME)/verif/formal
@@ -44,12 +44,12 @@ all: $(VLOG_out) formal-checks
 formal-checks: $(SMT2_out)  $(SMT2_COVER) $(SMT2_RPTS)
 
 synthesise: $(VLOG_out)
-$(VLOG_out) : YS_SCRIPT = write-verilog.ys
+$(VLOG_out) : YS_SCRIPT = write-verilog.tcl
 $(VLOG_out) : $(YS_SCRIPT) $(SRC_RTL)
 	$(YS) -QT -l $(LOG_SYNTH) $(YS_SCRIPT)
 
 .PHONY: adder
-adder       : YS_SCRIPT = adder.ys
+adder       : YS_SCRIPT = adder.tcl
 adder       : ../../rtl/coprocessor/scarv_cop_palu_adder.v
 	$(YS) -QT $(YS_SCRIPT)
 

@@ -58,7 +58,7 @@ $> make -B benchmarks LIBSCARV_ARCH=<riscv/riscv-xcrypto>
 ```
 
 This will run all of the benchmarks, collect their output, and post process
-it into results files under `$REPO_HOME/work/benchmarks/`. These files can
+it into results files under `$XC_WORK/benchmarks/`. These files can
 later be used for whatever custom analysis one cares to do.
 
 The set of underlying steps are performed by the `Makefile` in
@@ -68,7 +68,7 @@ The set of underlying steps are performed by the `Makefile` in
 is valid Python2 code.
 
 The simulator output is piped to a file called
-`$REPO_HOME/work/benchmarks/<name>.py` and can then be
+`$XC_WORK/benchmarks/<name>.py` and can then be
 imported by other scripts for further analysis.
 
 ## Gottchas

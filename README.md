@@ -150,7 +150,7 @@ have an actual hardware platform on which to implement the reference
 design.
 
 Information on how to build and use the simulation binary is found
-in [$XC_HOME/flow/verilator/README.md](./flow/verilator/README.md).
+in [$REPO_HOME/flow/verilator/README.md](./flow/verilator/README.md).
 
 Example code to run in the integration testbench is found in 
 `examples/integration-test`
@@ -158,10 +158,10 @@ Example code to run in the integration testbench is found in
 **Benchmarking**
 
 The integration testbench described in 
-[$XC_HOME/flow/verilator/README.md](./flow/verilator/README.md)
+[$REPO_HOME/flow/verilator/README.md](./flow/verilator/README.md)
 is also used to run the benchmarking programs.
 More information on the benchmarking flow can be found in
-[$XC_HOME/flow/benchmarks/README.md](./flow/benchmarks/README.md).
+[$REPO_HOME/flow/benchmarks/README.md](./flow/benchmarks/README.md).
 
 
 **Unit Tests**
@@ -187,7 +187,7 @@ $> make icarus_run_all  # Run all unit tests as a regression
 ```
 
 The `<file>` path should point at a unit-test hex file, present in
-`${XC_HOME}/work/unit/*.hex`. Using `${XC_HOME}` as part of an absolute path
+`$XC_WORK/unit/*.hex`. Using `$XC_WORK` as part of an absolute path
 to the hex file is advised.
 
 ## Formal testbench

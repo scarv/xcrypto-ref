@@ -1,13 +1,13 @@
 
 ifndef REPO_HOME
-    $(error "Please run 'source ./bin/source.me.sh' to setup the project workspace")
+    $(error "Please run 'source ./bin/conf.sh' to setup the project workspace")
 endif
 
 PARSE_OPCODES = $(REPO_HOME)/extern/riscv-opcodes/parse-opcodes
 OPCODES_SPEC  = $(REPO_HOME)/extern/riscv-opcodes/opcodes-xcrypto
 RTL_DECODER   = $(XC_WORK)/ise_decode.v
 
-UNIT_TESTS    = $(shell find . -path "./work/unit/*.hex")
+UNIT_TESTS    = $(shell find . -path "$(XC_WORK)/unit/*.hex")
 UNIT_WAVES    = $(UNIT_TESTS:%.hex=%.vcd)
 
 FORMAL_CHECKS = $(shell find ./verif/formal -name "fml_chk_*.v")
@@ -21,7 +21,7 @@ export FML_ENGINE     = boolector
 export SIM_UNIT_TEST ?= $(XC_WORK)/unit/00-mvcop.hex
 export RTL_TIMEOUT   ?= 300
 
-export VERILATOR_SIM ?= $(REPO_HOME)/work/verilator/scarv_prv_xcrypt_top
+export VERILATOR_SIM ?= $(XC_WORK)/verilator/scarv_prv_xcrypt_top
 
 #
 # Should be either "riscv" or "riscv-xcrypto"
@@ -123,7 +123,7 @@ icarus_run: icarus_build unit_tests
 icarus_run_all : $(UNIT_WAVES) unit_tests
 	-grep -m 1 --color -e "ERROR" $(XC_WORK)/unit/*.log
 
-work/unit/%.vcd : $(XC_WORK)/unit/%.hex icarus_build
+$(XC_WORK)/unit/%.vcd : $(XC_WORK)/unit/%.hex icarus_build
 	$(MAKE) -C $(REPO_HOME)/flow/icarus run \
         SIM_UNIT_TEST=$< \
         SIM_LOG=$(XC_WORK)/unit/$(notdir $@).log

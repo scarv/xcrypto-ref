@@ -45,4 +45,5 @@ image : ${IMAGE_TARGETS_DOT} ${IMAGE_TARGETS_EPS}
 all   : dir image ${BUILD}/ref.pdf
 
 clean :
+	@rm -rf ${BUILD}/image
 	@rm -f ${BUILD}/*

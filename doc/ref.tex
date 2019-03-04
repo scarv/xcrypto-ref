@@ -307,7 +307,7 @@ transactions over the CPU/COP interface in {\em normal} mode.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{./diagrams/cpu-cop-if-1.png}
+\includegraphics[width=\textwidth]{image/cpu-cop-if-1.png}
 \caption{Simple instruction request, acknowledge, result with delays.
 The first transaction shows an instruction request in cycle 1, followed
 by the acknowledgement and result in cycle 2.
@@ -320,7 +320,7 @@ stalls.}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{./diagrams/cpu-cop-if-2.png}
+\includegraphics[width=\textwidth]{image/cpu-cop-if-2.png}
 \caption{This figure shows the same three transactions as in figure
 \ref{fig:cpu-cop-if-waves-1} but with the requests issued back to back.
 In the set of transactions, the results of each transaction are not always
@@ -387,7 +387,7 @@ section \ref{sec:if-clk-reset}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{./diagrams/cop-mem-if-1.png}
+\includegraphics[width=\textwidth]{image/cop-mem-if-1.png}
 \caption{This timing diagram shows a read, followed by a stalled read,
 followed by a write, and finally a stalled write on the COP memory interface.
 Note that {\tt cop\_mem\_cen} remains high for only a single cycle in a
@@ -398,7 +398,7 @@ asserted.}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{./diagrams/cop-mem-if-2.png}
+\includegraphics[width=\textwidth]{image/cop-mem-if-2.png}
 \caption{This timing diagram shows the same set of transactions as in
 \ref{fig:cop-mem-if-waves-1} but back-to-back with no intervening cycles
 where the bus is idle.}
@@ -413,7 +413,7 @@ This section describes the main internal blocks and interfaces of the COP.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{diagrams/cop-block-diagram.png}
+\includegraphics[width=0.7\textwidth]{image/cop-block-diagram.png}
 \caption{A block diagram of the main components and data paths of
 the COP. Note that while inputs and outputs of the COP are registered,
 there are several multi-cycle components inside each of the functional
@@ -448,7 +448,7 @@ behaviour is shown in figure \ref{fig:top-level-fsm}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{diagrams/top-level-fsm.eps}
+\includegraphics[width=0.7\textwidth]{image/top-level-fsm.pdf}
 \caption{FSM diagram showing the top level instruction accept/execute/retire
 stages.}
 \label{fig:top-level-fsm}
@@ -945,7 +945,7 @@ and \SIGREF{cop\_mem\_error} signals must be clear on the
 
 \begin{figure}
 \centering
-\includegraphics[width=1.0\textwidth]{diagrams/fsm-load-store.eps}
+\includegraphics[width=1.0\textwidth]{image/fsm-load-store.pdf}
 \caption{State transition diagram for the memory interface block.
 Note that memory transactions will always be launched when exiting the
 {\tt IDLE} state. There is also an implicit edge from every state to
@@ -1080,11 +1080,11 @@ implementation.
 
 \section{Integration Guide}
 \label{sec:integration}
-\import{./implementation/}{integration.tex}
+\import{./tex/}{integration.tex}
 
 \section{Verification}
 \label{sec:verification}
-\import{./implementation/}{verify.tex}
+\import{./tex/}{verify.tex}
 
 % =============================================================================
 

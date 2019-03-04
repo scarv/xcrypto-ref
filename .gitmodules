@@ -1,12 +1,12 @@
-[submodule "external/riscv-opcodes"]
-	path = external/riscv-opcodes
+[submodule "extern/riscv-opcodes"]
+	path = extern/riscv-opcodes
 	url = https://github.com/scarv/riscv-opcodes.git
-[submodule "external/picorv32"]
-	path = external/picorv32
+[submodule "extern/picorv32"]
+	path = extern/picorv32
 	url = https://github.com/cliffordwolf/picorv32.git
-[submodule "external/libscarv"]
-	path = external/libscarv
+[submodule "extern/libscarv"]
+	path = extern/libscarv
 	url = https://github.com/scarv/libscarv.git
-[submodule "external/texmf"]
-	path = external/texmf
+[submodule "extern/texmf"]
+	path = extern/texmf
 	url = https://github.com/scarv/texmf.git

@@ -6,7 +6,7 @@ export LD       = $(RISCV)/bin/riscv32-unknown-elf-ld
 export OBJDUMP  = $(RISCV)/bin/riscv32-unknown-elf-objdump
 export OBJCOPY  = $(RISCV)/bin/riscv32-unknown-elf-objcopy
 
-export INC_DIR  = -I$(XC_HOME)/examples/common \
+export INC_DIR  = -I$(REPO_HOME)/example/common \
                   -I$(LIBSCARV)/build/$(LIBSCARV_ARCH)/include \
                   -I$(LIBSCARV)/build/$(LIBSCARV_ARCH)/include/scarv
 
@@ -15,7 +15,7 @@ export ASFLAGS  += -march=rv32imax -mabi=ilp32
 export CFLAGS   += -mabi=ilp32 -march=rv32im -O2 -Wall $(INC_DIR) \
                   -nostartfiles -nostdlib
 
-export LDSCRIPT ?= $(XC_HOME)/examples/common/linker.ld
+export LDSCRIPT ?= $(REPO_HOME)/example/common/linker.ld
 
 export LIBSCARV_A = $(LIBSCARV)/build/$(LIBSCARV_ARCH)/lib/libscarv.a
 

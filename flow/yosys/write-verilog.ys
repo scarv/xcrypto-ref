@@ -1,7 +1,7 @@
 
 # Read in the design
 read_verilog -I../../work/ ../../rtl/coprocessor/*
-read_verilog               ../../external/picorv32/picorv32.v
+read_verilog               ../../extern/picorv32/picorv32.v
 read_verilog -I../../work/ ../../rtl/integration/*
 
 # Synthesise processes ready for SCC check.

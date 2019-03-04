@@ -1,6 +1,6 @@
 
 RTL_TIMEOUT ?=200
-RTL_WAVES   ?= $(XC_HOME)/work/icarus/unit-waves.vcd
+RTL_WAVES   ?= $(REPO_HOME)/work/icarus/unit-waves.vcd
 RTL_TRACE    =
 
 SIM_UNIT_TEST ?= 
@@ -8,13 +8,13 @@ SIM_UNIT_TEST ?=
 ICARUS      = iverilog
 IRUN        = vvp
 
-MANIFEST        ?= $(XC_HOME)/flow/icarus/manifest.cmd
-SIM              = $(XC_HOME)/work/icarus/isim-unit
-SIM_LOG         ?= $(XC_HOME)/work/icarus/sim-unit.log
+MANIFEST        ?= $(REPO_HOME)/flow/icarus/manifest.cmd
+SIM              = $(REPO_HOME)/work/icarus/isim-unit
+SIM_LOG         ?= $(REPO_HOME)/work/icarus/sim-unit.log
 
-INTEG_MANIFEST  ?= $(XC_HOME)/flow/icarus/integration.cmd
-INTEG_SIM        = $(XC_HOME)/work/icarus/isim-integ
-INTEG_SIM_LOG   ?= $(XC_HOME)/work/icarus/sim-integ.log
+INTEG_MANIFEST  ?= $(REPO_HOME)/flow/icarus/integration.cmd
+INTEG_SIM        = $(REPO_HOME)/work/icarus/isim-integ
+INTEG_SIM_LOG   ?= $(REPO_HOME)/work/icarus/sim-integ.log
 INTEG_HEX_TMP    = $(XC_WORK)/unit/integ-tmp.hex
 
 DEFINES = 
@@ -67,7 +67,7 @@ $(SIM_UNIT_TEST:%.hex=%.integ.hex) : $(SIM_UNIT_TEST)
 #
 # Run the integration testbench.
 #
-integ-run: RTL_WAVES=$(XC_HOME)/work/icarus/integ-waves.vcd
+integ-run: RTL_WAVES=$(REPO_HOME)/work/icarus/integ-waves.vcd
 integ-run: $(INTEG_SIM) $(SIM_UNIT_TEST:%.hex=%.integ.hex)
 	$(IRUN) -l $(INTEG_SIM_LOG) \
         $(INTEG_SIM) \

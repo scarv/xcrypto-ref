@@ -25,13 +25,13 @@ We can `libscarv`  and the example programs against the basic RISC-V
 architecture using:
 
 ```sh
-$> make -B libscarv examples LIBSCARV_ARCH=riscv
+$> make -B libscarv example LIBSCARV_ARCH=riscv
 ```
 
 Or against the RISC-V+XCrypto architecture using:
 
 ```sh
-$> make -B libscarv examples LIBSCARV_ARCH=riscv-xcrypto.
+$> make -B libscarv example LIBSCARV_ARCH=riscv-xcrypto.
 ```
 
 One can clean the libscarv target with:
@@ -58,17 +58,17 @@ $> make -B benchmarks LIBSCARV_ARCH=<riscv/riscv-xcrypto>
 ```
 
 This will run all of the benchmarks, collect their output, and post process
-it into results files under `$XC_HOME/work/benchmarks/`. These files can
+it into results files under `$REPO_HOME/work/benchmarks/`. These files can
 later be used for whatever custom analysis one cares to do.
 
 The set of underlying steps are performed by the `Makefile` in
-`$XC_HOME/flow/benchmarks`
+`$REPO_HOME/flow/benchmarks`
 
 **Note:** what is printed to the virtual `stdout` of the simulator
 is valid Python2 code.
 
 The simulator output is piped to a file called
-`$XC_HOME/work/benchmarks/<name>.py` and can then be
+`$REPO_HOME/work/benchmarks/<name>.py` and can then be
 imported by other scripts for further analysis.
 
 ## Gottchas

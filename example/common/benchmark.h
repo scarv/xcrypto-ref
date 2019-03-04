@@ -10,7 +10,7 @@ benchmark automation suite.
 #define XC_BENCHMARK_INIT \
     putstr("import sys\n"); \
     putstr("import os\n"); \
-    putstr("sys.path.append(os.path.expandvars(\"$XC_HOME/flow/benchmarks\"))\n"); \
+    putstr("sys.path.append(os.path.expandvars(\"$REPO_HOME/flow/benchmarks\"))\n"); \
     putstr("from XCBenchmark import *\n"); \
     putstr("print('XCBenchmark begin')\n")
 

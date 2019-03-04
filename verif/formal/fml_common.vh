@@ -24,6 +24,8 @@
 `define CRD1 vtx_crd1_val_pre
 `define CRD2 vtx_crd2_val_pre
 `define CRDM vtx_crdm_val_pre
+`define RS1  vtx_instr_rs1
+`define RS2  vtx_instr_rs2
 
 // Start a checker block
 `define VTX_CHECK_BEGIN(NAME) \

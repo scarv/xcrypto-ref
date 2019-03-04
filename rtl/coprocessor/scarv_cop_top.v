@@ -570,10 +570,11 @@ scarv_cop_mem i_scarv_cop_mem (
 .mem_is_store    (mem_is_store    ), // Is the instruction a store?
 .mem_addr_error  (mem_addr_error  ), // Memory address exception
 .mem_bus_error   (mem_bus_error   ), // Memory bus exception
-.gpr_rs1         (u_rs1           ), // Source register 1
-.cpr_rs1         (crs1_rdata      ), // Source register 2
-.cpr_rs2         (crs2_rdata      ), // Source register 3
-.cpr_rs3         (crs3_rdata      ), // Source register 3
+.gpr_rs1         (u_rs1           ), // GPR Source register 1
+.gpr_rs2         (u_rs2           ), // GPR Source register 2
+.cpr_rs1         (crs1_rdata      ), // XCR Source register 2
+.cpr_rs2         (crs2_rdata      ), // XCR Source register 3
+.cpr_rs3         (crs3_rdata      ), // XCR Source register 3
 .id_wb_h         (id_wb_h         ), // Halfword index (load/store)
 .id_wb_b         (id_wb_b         ), // Byte index (load/store)
 .id_imm          (id_imm          ), // Source immedate

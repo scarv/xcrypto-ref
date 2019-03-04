@@ -26,6 +26,7 @@ output wire         mem_bus_error    , // Memory bus exception
 output wire         mem_is_store     , // Is this a store instruction?
 
 input  wire [31:0]  gpr_rs1          , // GPR Source register 1
+input  wire [31:0]  gpr_rs2          , // GPR Source register 2
 input  wire [31:0]  cpr_rs1          , // Source register 2
 input  wire [31:0]  cpr_rs2          , // Source register 2
 input  wire [31:0]  cpr_rs3          , // Source register 3
@@ -54,6 +55,8 @@ input  wire         cop_mem_error      // Error
 // Common field encodings and definitions
 `include "scarv_cop_common.vh"
 
+wire mem_is_load;
+
 wire is_mem  = mem_ivalid && id_class == SCARV_COP_ICLASS_LOADSTORE;
 
 wire is_lw   = is_mem && id_subclass == SCARV_COP_SCLASS_LD_W;
@@ -62,8 +65,20 @@ wire is_lb   = is_mem && id_subclass == SCARV_COP_SCLASS_LB_CR;
 wire is_sw   = is_mem && id_subclass == SCARV_COP_SCLASS_ST_W;
 wire is_sh   = is_mem && id_subclass == SCARV_COP_SCLASS_ST_H;
 wire is_sb   = is_mem && id_subclass == SCARV_COP_SCLASS_ST_B;
+wire is_ldr_w= is_mem && id_subclass == SCARV_COP_SCLASS_LDR_W;
+wire is_ldr_h= is_mem && id_subclass == SCARV_COP_SCLASS_LDR_H;
+wire is_ldr_b= is_mem && id_subclass == SCARV_COP_SCLASS_LDR_B;
+wire is_str_w= is_mem && id_subclass == SCARV_COP_SCLASS_STR_W;
+wire is_str_h= is_mem && id_subclass == SCARV_COP_SCLASS_STR_H;
+wire is_str_b= is_mem && id_subclass == SCARV_COP_SCLASS_STR_B;
 
-wire single_mem = is_lw || is_lh || is_lb || is_sw || is_sh || is_sb;
+// Is this an indexed load/store?
+wire ildst = is_ldr_w || is_ldr_h || is_ldr_b || is_str_w || 
+             is_str_h || is_str_b ;
+
+wire single_mem = 
+    is_lw    || is_lh    || is_lb    || is_sw    || is_sh    || is_sb    ||
+    is_ldr_w || is_ldr_h || is_ldr_b || is_str_w || is_str_h || is_str_b ;
 
 wire is_ga_b = is_mem && id_subclass == SCARV_COP_SCLASS_GATHER_B;
 wire is_ga_h = is_mem && id_subclass == SCARV_COP_SCLASS_GATHER_H;
@@ -71,9 +86,16 @@ wire is_ga_h = is_mem && id_subclass == SCARV_COP_SCLASS_GATHER_H;
 wire is_sc_b = is_mem && id_subclass == SCARV_COP_SCLASS_SCATTER_B;
 wire is_sc_h = is_mem && id_subclass == SCARV_COP_SCLASS_SCATTER_H;
 
-wire word_op     = is_lw || is_sw;
-wire halfword_op = is_lh || is_sh || is_sc_h || is_ga_h;
-wire byte_op     = is_lb || is_sb || is_sc_b || is_ga_b;
+wire word_op         = is_lw    || is_sw    || is_str_w     || is_ldr_w;
+wire halfword_op_nsg = is_lh    || is_sh    || is_ldr_h     ||is_str_h;
+wire byte_op_nsg     = is_lb    || is_sb    || is_ldr_b     ||is_str_b;
+
+wire halfword_op     = is_sc_h  || is_ga_h  || halfword_op_nsg;
+wire byte_op         = is_sc_b  || is_ga_b  || byte_op_nsg;
+
+wire word_ld         = word_op && mem_is_load;
+wire byte_ld_nsg     = byte_op_nsg && mem_is_load;
+wire halfword_ld_nsg = halfword_op_nsg && mem_is_load;
 
 // Current and next memory FSM states.
 reg [3:0]   mem_fsm;
@@ -118,8 +140,10 @@ always @(*) begin
         sg_offset = cpr_rs2[31:24];
 end
 
-wire [31:0] addr_offset = single_mem ? id_imm       :
+wire [31:0] addr_offset = ildst      ? gpr_rs2      :
+                          single_mem ? id_imm       :
                                        sg_offset    ;
+
 wire [31:0] mem_address = gpr_rs1 + addr_offset     ;
 
 //
@@ -129,17 +153,21 @@ assign cop_mem_cen    = mem_ivalid && !mem_idone && !mem_addr_error;
 
 assign cop_mem_addr   = mem_address & {{30{cop_mem_cen}},2'b00};
 
-assign cop_mem_wen    = is_sc_b || is_sc_h || is_sw || is_sh || is_sb;
-assign mem_is_store   = cop_mem_wen;
+assign mem_is_store   = is_sc_b  || is_sc_h  || is_sw    || is_sh || is_sb ||
+                        is_str_w || is_str_h || is_str_b ;
+
+assign mem_is_load    = !mem_is_store;
+
+assign cop_mem_wen    = mem_is_store;
 
 // Byte lane select wires.
 wire   ben_word       = is_sw;
-wire   ben_hw_lo      = (is_sh || is_sc_h) && !mem_address[1];
-wire   ben_hw_hi      = (is_sh || is_sc_h) &&  mem_address[1];
-wire   ben_b_3        = (is_sb || is_sc_b) &&  mem_address[1:0] == 2'b11;
-wire   ben_b_2        = (is_sb || is_sc_b) &&  mem_address[1:0] == 2'b10;
-wire   ben_b_1        = (is_sb || is_sc_b) &&  mem_address[1:0] == 2'b01;
-wire   ben_b_0        = (is_sb || is_sc_b) &&  mem_address[1:0] == 2'b00;
+wire   ben_hw_lo      = (mem_is_store && halfword_op) && !mem_address[1];
+wire   ben_hw_hi      = (mem_is_store && halfword_op) &&  mem_address[1];
+wire   ben_b_3        = (mem_is_store && byte_op) && mem_address[1:0] == 2'b11;
+wire   ben_b_2        = (mem_is_store && byte_op) && mem_address[1:0] == 2'b10;
+wire   ben_b_1        = (mem_is_store && byte_op) && mem_address[1:0] == 2'b01;
+wire   ben_b_0        = (mem_is_store && byte_op) && mem_address[1:0] == 2'b00;
 
 assign cop_mem_ben[3] = ben_word || ben_hw_hi || ben_b_3;
 assign cop_mem_ben[2] = ben_word || ben_hw_hi || ben_b_2;
@@ -169,9 +197,9 @@ always @(*) begin
 end
 
 assign cop_mem_wdata =
-    is_sw                       ? cpr_rs2                                  :
-    is_sh                       ? hw_wdata << (mem_address[1] ? 16 : 0)    :
-    is_sb || is_sc_b || is_sc_h ? by_wdata << {mem_address[1:0],3'b00}     :
+    mem_is_store && word_op     ? cpr_rs2                                  :
+    mem_is_store && halfword_op ? hw_wdata << (mem_address[1] ? 16 : 0)    :
+    mem_is_store && byte_op     ? by_wdata << {mem_address[1:0],3'b00}     :
                                   32'b0                                    ;
 
 // Memory transaction finish tracking
@@ -192,33 +220,34 @@ assign mem_bus_error =
 //  This prevents logic loops where the next FSM state depends on the
 //  computed memory address being correct, but where the computed memory
 //  address also depends on the *next* fsm state.
-wire w_addr_err     = |((gpr_rs1[1:0] + id_imm[1:0])&2'b11);
-wire h_addr_err     = gpr_rs1[0] || id_imm[0];
+wire w_addr_err     = |((gpr_rs1[1:0] + addr_offset[1:0])&2'b11);
+wire h_addr_err     = gpr_rs1[0] || addr_offset[0];
+
 wire sgh_0_addr_err = gpr_rs1[0] || cpr_rs2[0];
 wire sgh_1_addr_err = gpr_rs1[0] || cpr_rs2[16];
 
 assign mem_addr_error   = 
-    (is_sw   || is_lw  ) && w_addr_err   ||
-    (is_sh   || is_lh  ) && h_addr_err   ||
-    (is_ga_h || is_sc_h) && (sgh_0_addr_err || sgh_1_addr_err);
+    (word_op            ) && w_addr_err   ||
+    (halfword_op_nsg    ) && h_addr_err   ||
+    (is_sc_h || is_ga_h ) && (sgh_0_addr_err || sgh_1_addr_err);
 
 assign mem_idone        = 
     mem_ivalid && mem_txn_good && n_mem_fsm == FSM_IDLE       ||
     mem_ivalid && mem_txn_error                                ;
 
 // Clear high bytes/halfword
-wire clear_hb = is_lb && !id_wb_h && !id_wb_b;
-wire clear_hh = is_lh && !id_wb_h;
+wire clear_hb = byte_ld_nsg     && !id_wb_h && !id_wb_b;
+wire clear_hh = halfword_ld_nsg && !id_wb_h;
 
 //
 // Writeback data assignment.
-wire wb_hw_hi = (is_lh &&  id_wb_h) || (is_ga_h && fsm_h1  );
-wire wb_hw_lo = (is_lh && !id_wb_h) || (is_ga_h && fsm_idle);
+wire wb_hw_hi = (halfword_ld_nsg &&  id_wb_h) || (is_ga_h && fsm_h1  );
+wire wb_hw_lo = (halfword_ld_nsg && !id_wb_h) || (is_ga_h && fsm_idle);
 
-wire wb_b_3   = (is_lb &&  id_wb_h &&  id_wb_b) || (is_ga_b && fsm_b3  );
-wire wb_b_2   = (is_lb &&  id_wb_h && !id_wb_b) || (is_ga_b && fsm_b2  );
-wire wb_b_1   = (is_lb && !id_wb_h &&  id_wb_b) || (is_ga_b && fsm_b1  );
-wire wb_b_0   = (is_lb && !id_wb_h && !id_wb_b) || (is_ga_b && fsm_idle);
+wire wb_b_3   = (byte_ld_nsg &&  id_wb_h &&  id_wb_b) || (is_ga_b && fsm_b3  );
+wire wb_b_2   = (byte_ld_nsg &&  id_wb_h && !id_wb_b) || (is_ga_b && fsm_b2  );
+wire wb_b_1   = (byte_ld_nsg && !id_wb_h &&  id_wb_b) || (is_ga_b && fsm_b1  );
+wire wb_b_0   = (byte_ld_nsg && !id_wb_h && !id_wb_b) || (is_ga_b && fsm_idle);
 
 wire [7:0] loaded_bytes [3:0];  // Load data as array of bytes
 reg  [7:0] wb_bytes     [3:0];  // Writeback data as array of bytes.
@@ -280,10 +309,10 @@ assign mem_cpr_rd_wdata  =
      wb_bytes[1] & {8{!clear_hb}},
      wb_bytes[0]};
 
-assign mem_cpr_rd_ben[3] = mem_txn_good && (is_lw || wb_hw_hi || wb_b_3 || clear_hb || clear_hh);
-assign mem_cpr_rd_ben[2] = mem_txn_good && (is_lw || wb_hw_hi || wb_b_2 || clear_hb || clear_hh);
-assign mem_cpr_rd_ben[1] = mem_txn_good && (is_lw || wb_hw_lo || wb_b_1 || clear_hb);
-assign mem_cpr_rd_ben[0] = mem_txn_good && (is_lw || wb_hw_lo || wb_b_0);
+assign mem_cpr_rd_ben[3] = mem_txn_good && (word_ld || wb_hw_hi || wb_b_3 || clear_hb || clear_hh);
+assign mem_cpr_rd_ben[2] = mem_txn_good && (word_ld || wb_hw_hi || wb_b_2 || clear_hb || clear_hh);
+assign mem_cpr_rd_ben[1] = mem_txn_good && (word_ld || wb_hw_lo || wb_b_1 || clear_hb);
+assign mem_cpr_rd_ben[0] = mem_txn_good && (word_ld || wb_hw_lo || wb_b_0);
 
 //
 // FSM state names

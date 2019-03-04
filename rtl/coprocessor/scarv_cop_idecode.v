@@ -61,13 +61,17 @@ parameter ISE_MCCR_P2   = 1; //
 //
 `include "ise_decode.v"
 
+// Put CRD register address in CRS2 address. Makes downstream logic
+// easier for write data selection.
+wire   crd_in_crs2 = dec_str_w || dec_str_h || dec_str_b;
+
 assign id_crs1 = dec_arg_crs1;
-assign id_crs2 = dec_arg_crs2;
+assign id_crs2 = crd_in_crs2 ? dec_arg_crd : dec_arg_crs2;
 
 wire   crd_in_crs3 = dec_mix_l || dec_mix_h || dec_ins ||
                      dec_ld_liu  || dec_ld_hiu  || dec_ld_bu ||
                      dec_ld_hu  || dec_scatter_b || dec_scatter_h ||
-                     dec_bop;
+                     dec_bop    ;
 
 assign id_crs3 = crd_in_crs3 ? dec_arg_crd : dec_arg_crs3;
 
@@ -77,6 +81,11 @@ assign id_crd1 = {dec_arg_crdm, 1'b0};
 assign id_crd2 = {dec_arg_crdm, 1'b1};
 assign id_rd   = dec_arg_rd;
 assign id_pw   = {dec_arg_ca, dec_arg_cb, dec_arg_cc};
+
+// Badly specified indexed load/store sub-word operation
+// where source/dest halfword or byte is invalid.
+wire bad_index_ldst = 
+    (dec_arg_b0 == 2'd1 || dec_arg_b0 == 2'd3) && (dec_ldr_hu || dec_str_h);
 
 wire shift_imm_pack_width =
         id_pw == 3'b100 &&
@@ -93,6 +102,7 @@ wire bad_pack_width =
 
 assign id_exception = 
     dec_invalid_opcode || 
+    bad_index_ldst     ||
     bad_pack_width      ; // FIXME: Add feature switches to this expression.
 
 
@@ -109,8 +119,9 @@ wire class_twiddle      =
 
 wire class_loadstore    = 
     dec_scatter_b || dec_gather_b  || dec_scatter_h || dec_gather_h  ||
-    dec_ld_bu    || dec_ld_hu    || dec_ld_w     || dec_st_b     ||
-    dec_st_h     || dec_st_w     ;
+    dec_ld_bu    || dec_ld_hu      || dec_ld_w      || dec_st_b      ||
+    dec_st_h     || dec_st_w       || dec_ldr_w     || dec_ldr_hu    ||
+    dec_ldr_bu   || dec_str_w      || dec_str_h     || dec_str_b     ;
 
 wire class_random       = 
     dec_rngseed || dec_rngsamp || dec_rngtest;
@@ -159,7 +170,13 @@ wire [4:0] subclass_load_store =
     {5{dec_st_h    }} & {SCARV_COP_SCLASS_ST_H    } |
     {5{dec_ld_hu   }} & {SCARV_COP_SCLASS_LH_CR    } |
     {5{dec_st_b    }} & {SCARV_COP_SCLASS_ST_B    } |
-    {5{dec_ld_bu   }} & {SCARV_COP_SCLASS_LB_CR    } ;
+    {5{dec_ld_bu   }} & {SCARV_COP_SCLASS_LB_CR    } |
+    {5{dec_ldr_w   }} & {SCARV_COP_SCLASS_LDR_W     } |
+    {5{dec_ldr_hu  }} & {SCARV_COP_SCLASS_LDR_H     } |
+    {5{dec_ldr_bu  }} & {SCARV_COP_SCLASS_LDR_B     } |
+    {5{dec_str_w   }} & {SCARV_COP_SCLASS_STR_W     } |
+    {5{dec_str_h   }} & {SCARV_COP_SCLASS_STR_H     } |
+    {5{dec_str_b   }} & {SCARV_COP_SCLASS_STR_B     } ;
 
 wire [4:0] subclass_mp =
     {5{dec_mequ }} & {SCARV_COP_SCLASS_MEQU  } | 
@@ -236,7 +253,13 @@ assign id_imm =
     {32{imm_sh_mp   }} & {26'b0, dec_arg_cmshamt                          } |
     {32{imm_rtamt   }} & {28'b0, dec_arg_rtamt                            } ;
 
-assign id_wb_h = dec_arg_cc ;
-assign id_wb_b = imm_ld ? dec_arg_cd : dec_arg_ca;
+wire indexed_ldst = dec_ldr_w  || dec_ldr_hu || dec_ldr_bu || 
+                    dec_str_w  || dec_str_h  || dec_str_b  ;
+
+assign id_wb_h = indexed_ldst ? dec_arg_b0[1] : dec_arg_cc ;
+
+assign id_wb_b = indexed_ldst ? dec_arg_b0[0] :
+                 imm_ld       ? dec_arg_cd    :
+                                dec_arg_ca    ;
 
 endmodule

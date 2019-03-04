@@ -69,9 +69,9 @@ a formally verified, area-optimised reference implementation of XCrypto that (e.
        [Yosys](http://www.clifford.at/yosys)
        Verilog synthesis tool,
        exporting the
-       `YS_INSTALL`
+       `YOSYS_ROOT`
        environment variable st.
-       `${YS_INSTALL}/yosys` 
+       `${YOSYS_ROOT}/yosys` 
        points at the 
        Yosys
        executable,

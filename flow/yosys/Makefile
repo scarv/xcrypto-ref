@@ -1,7 +1,6 @@
 
-YS_INSTALL  ?= $(YOSYS_INSTALL)
-YS          ?= $(YS_INSTALL)/yosys
-YSMTBMC     ?= $(YS_INSTALL)/yosys-smtbmc
+YS          ?= $(YOSYS_ROOT)/yosys
+YSMTBMC     ?= $(YOSYS_ROOT)/yosys-smtbmc
 YS_SCRIPT   ?= write-smt-tb.tcl
 
 BMC_STEPS   ?= 10

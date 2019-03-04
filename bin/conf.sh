@@ -9,9 +9,9 @@ export REPO_HOME=`pwd`
 export XC_WORK=$REPO_HOME/build
 export LIBSCARV=$REPO_HOME/extern/libscarv
 
-if [ -z $YS_INSTALL ] ; then
+if [ -z $YOSYS_ROOT ] ; then
     # Export a dummy "Yosys Root" path environment variable.
-    export YS_INSTALL=
+    export YOSYS_ROOT=
 fi
 
 if [ -z $RISCV ] ; then
@@ -28,7 +28,7 @@ texhash &> /dev/null
 
 echo "REPO_HOME      = $REPO_HOME"
 echo "XC_WORK        = $XC_WORK"
-echo "YS_INSTALL     = $YS_INSTALL"
+echo "YOSYS_ROOT     = $YOSYS_ROOT"
 echo "LIBSCARV       = $LIBSCARV"
 echo "RISCV          = $RISCV"
 echo "VERILATOR_ROOT = $VERILATOR_ROOT"

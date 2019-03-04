@@ -27,7 +27,6 @@ wire [31:0] sw_addr = `RS1 + `RS2;
     if(sw_addr[1:0]) begin
 
         `VTX_ASSERT_RESULT_IS(SCARV_COP_INSN_BAD_SAD)
-        `VTX_ASSERT(vtx_mem_cen_0  == 1'b0);
 
     end else if(vtx_instr_result == SCARV_COP_INSN_SUCCESS) begin
     

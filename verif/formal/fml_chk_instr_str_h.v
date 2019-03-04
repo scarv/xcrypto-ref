@@ -30,14 +30,13 @@ wire [15:0] sh_wdata = src_byte == 2'd2 ? `CRD[31:16] :
     `VTX_ASSERT(vtx_instr_result != SCARV_COP_INSN_LD_ERR);
     `VTX_ASSERT(vtx_instr_result != SCARV_COP_INSN_BAD_LAD);
 
-    if(sh_addr[0]) begin
-
-        `VTX_ASSERT_RESULT_IS(SCARV_COP_INSN_BAD_SAD)
-
-    end else if(src_byte != 2'd0 && src_byte != 2'd2) begin
+    if(src_byte != 2'd0 && src_byte != 2'd2) begin
 
         `VTX_ASSERT_RESULT_IS(SCARV_COP_INSN_BAD_INS)
-        `VTX_ASSERT(vtx_mem_cen_0  == 1'b0);
+
+    end else if(sh_addr[0]) begin
+
+        `VTX_ASSERT_RESULT_IS(SCARV_COP_INSN_BAD_SAD)
 
     end else if(vtx_instr_result == SCARV_COP_INSN_SUCCESS) begin
     

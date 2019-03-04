@@ -13,7 +13,7 @@
 
 `VTX_CHECKER_MODULE_BEGIN(instr_ldr_w)
 
-wire [31:0] lw_addr = `RS1 + `RS2
+wire [31:0] lw_addr = `RS1 + `RS2;
 
 //
 // ldr_w
@@ -27,7 +27,6 @@ wire [31:0] lw_addr = `RS1 + `RS2
     if(lw_addr[1:0]) begin
 
         `VTX_ASSERT_RESULT_IS(SCARV_COP_INSN_BAD_LAD)
-        `VTX_ASSERT(vtx_mem_cen_0  == 1'b0);
         `VTX_ASSERT_CRD_VALUE_IS(vtx_crd_val_pre)
 
     end else if(vtx_instr_result == SCARV_COP_INSN_SUCCESS) begin

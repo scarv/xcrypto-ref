@@ -173,13 +173,18 @@ wire mem_txn_new    = !cop_mem_error &&
 wire mem_txn_finish = p_mem_cen && !(cop_mem_stall);
     
 always @(posedge g_clk) begin
-    if(mem_txn_new) begin
+    if(!g_resetn) begin
+
+        vtx_mem_cen  [0] <= 1'b0;
+
+    end else if(mem_txn_new) begin
         vtx_mem_cen  [0] <= cop_mem_cen  ;
         vtx_mem_wen  [0] <= cop_mem_wen  ;
         vtx_mem_addr [0] <= cop_mem_addr ;
         vtx_mem_wdata[0] <= cop_mem_wdata;
         vtx_mem_ben  [0] <= cop_mem_ben  ;
-    end 
+    end
+
     if(mem_txn_finish) begin
         vtx_mem_rdata[0] <= cop_mem_rdata;
         vtx_mem_error[0] <= cop_mem_error;
@@ -188,8 +193,13 @@ end
 
 genvar i;
 generate for (i=1 ; i < 5;i=i+1) begin
+
     always @(posedge g_clk) begin
-        if(mem_txn_new) begin
+        if(!g_resetn) begin
+
+        vtx_mem_cen  [i] <= 1'b0;
+
+        end else if(mem_txn_new) begin
             vtx_mem_cen  [i] <= vtx_mem_cen  [i-1];
             vtx_mem_wen  [i] <= vtx_mem_wen  [i-1];
             vtx_mem_addr [i] <= vtx_mem_addr [i-1];

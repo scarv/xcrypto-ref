@@ -31,16 +31,14 @@ wire [1:0] dest_halfword = dec_arg_b0;
     `VTX_ASSERT(vtx_instr_result != SCARV_COP_INSN_ST_ERR);
     `VTX_ASSERT(vtx_instr_result != SCARV_COP_INSN_BAD_SAD);
 
-    if(lh_addr[0]) begin
-
-        `VTX_ASSERT_RESULT_IS(SCARV_COP_INSN_BAD_LAD)
-        `VTX_ASSERT(vtx_mem_cen_0  == 1'b0);
-        `VTX_ASSERT_CRD_VALUE_IS(vtx_crd_val_pre)
-
-    end else if(dest_halfword != 2'd2 && dest_halfword != 2'd0) begin
+    if(dest_halfword != 2'd2 && dest_halfword != 2'd0) begin
         
         `VTX_ASSERT_RESULT_IS(SCARV_COP_INSN_BAD_INS)
-        `VTX_ASSERT(vtx_mem_cen_0  == 1'b0);
+        `VTX_ASSERT_CRD_VALUE_IS(vtx_crd_val_pre)
+
+    end else if(lh_addr[0]) begin
+
+        `VTX_ASSERT_RESULT_IS(SCARV_COP_INSN_BAD_LAD)
         `VTX_ASSERT_CRD_VALUE_IS(vtx_crd_val_pre)
 
     end else if(vtx_instr_result == SCARV_COP_INSN_SUCCESS) begin

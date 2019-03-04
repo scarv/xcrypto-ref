@@ -73,8 +73,8 @@ wire is_str_h= is_mem && id_subclass == SCARV_COP_SCLASS_STR_H;
 wire is_str_b= is_mem && id_subclass == SCARV_COP_SCLASS_STR_B;
 
 // Is this an indexed load/store?
-wire ildst = is_ldr_w || is_ldr_h || is_ldr_b || is_str_w || 
-             is_str_h || is_str_b ;
+wire ildst = is_ldr_w || is_ldr_h || is_ldr_b || 
+             is_str_w || is_str_h || is_str_b ;
 
 wire single_mem = 
     is_lw    || is_lh    || is_lb    || is_sw    || is_sh    || is_sb    ||
@@ -161,7 +161,7 @@ assign mem_is_load    = !mem_is_store;
 assign cop_mem_wen    = mem_is_store;
 
 // Byte lane select wires.
-wire   ben_word       = is_sw;
+wire   ben_word       = is_sw || is_str_w;
 wire   ben_hw_lo      = (mem_is_store && halfword_op) && !mem_address[1];
 wire   ben_hw_hi      = (mem_is_store && halfword_op) &&  mem_address[1];
 wire   ben_b_3        = (mem_is_store && byte_op) && mem_address[1:0] == 2'b11;
@@ -220,8 +220,11 @@ assign mem_bus_error =
 //  This prevents logic loops where the next FSM state depends on the
 //  computed memory address being correct, but where the computed memory
 //  address also depends on the *next* fsm state.
-wire w_addr_err     = |((gpr_rs1[1:0] + addr_offset[1:0])&2'b11);
-wire h_addr_err     = gpr_rs1[0] || addr_offset[0];
+
+wire [1:0] err_check_offset = ildst ? gpr_rs2[1:0] : id_imm[1:0];
+
+wire w_addr_err     = |((gpr_rs1[1:0] + err_check_offset[1:0])&2'b11);
+wire h_addr_err     = gpr_rs1[0] || err_check_offset[0];
 
 wire sgh_0_addr_err = gpr_rs1[0] || cpr_rs2[0];
 wire sgh_1_addr_err = gpr_rs1[0] || cpr_rs2[16];

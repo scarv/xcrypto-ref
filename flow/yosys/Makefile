@@ -60,7 +60,7 @@ $(SMTDIR)/%.smt2 : $(REPO_HOME)/verif/formal/fml_chk_%.v \
 	@mkdir -p $(word 1, $(dir $(SMT2_out)))
 	$(YS) -qQT -l $@.log \
         -p"verilog_defaults -add -DFML_CHECK_NAME=$(basename $(notdir $@))" \
-        -p"script $(YS_SCRIPT)" \
+        -p"tcl $(YS_SCRIPT)" \
         -p"write_smt2 -wires $@"
 
 include proof-depths.mk

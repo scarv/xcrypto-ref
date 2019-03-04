@@ -1,5 +1,6 @@
 +incdir+$(REPO_HOME)/rtl/coprocessor
 +incdir+$(REPO_HOME)/verif/formal
+$(REPO_HOME)/rtl/coprocessor/scarv_cop_sha3.v
 $(REPO_HOME)/rtl/coprocessor/scarv_cop_aes_sbox.v
 $(REPO_HOME)/rtl/coprocessor/scarv_cop_aes.v
 $(REPO_HOME)/rtl/coprocessor/scarv_cop_cprs.v

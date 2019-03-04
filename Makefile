@@ -7,7 +7,7 @@ PARSE_OPCODES = $(REPO_HOME)/extern/riscv-opcodes/parse-opcodes
 OPCODES_SPEC  = $(REPO_HOME)/extern/riscv-opcodes/opcodes-xcrypto
 RTL_DECODER   = $(XC_WORK)/ise_decode.v
 
-UNIT_TESTS    = $(shell find . -path "$(XC_WORK)/unit/*.hex")
+UNIT_TESTS    = $(shell find . -path "./build/unit/*.hex")
 UNIT_WAVES    = $(UNIT_TESTS:%.hex=%.vcd)
 
 FORMAL_CHECKS = $(shell find ./verif/formal -name "fml_chk_*.v")
@@ -68,17 +68,6 @@ clean: libscarv-clean benchmarks-clean
 
 
 #
-# Generates code needed for SPIKE instruction declaration.
-#
-spike-gen: $(XC_WORK)/spike-gen.h
-$(XC_WORK)/spike-gen.h: ./bin/ise-parse-opcodes.py ./doc/ise-opcodes.txt
-	cat ./doc/ise-opcodes.txt \
-        $(REPO_HOME)/extern/riscv-opcodes/opcodes \
-        $(REPO_HOME)/extern/riscv-opcodes/opcodes-rvc \
-        $(REPO_HOME)/extern/riscv-opcodes/opcodes-custom \
-    | ./bin/ise-parse-opcodes.py -c > $@
-
-#
 # Generate verilog code for the ISE instruction decoder.
 #
 .PHONY: rtl_decoder
@@ -121,9 +110,8 @@ icarus_run: icarus_build unit_tests
 #
 .PHONY: icarus_run_all
 icarus_run_all : $(UNIT_WAVES) unit_tests
-	-grep -m 1 --color -e "ERROR" $(XC_WORK)/unit/*.log
 
-$(XC_WORK)/unit/%.vcd : $(XC_WORK)/unit/%.hex icarus_build
+./build/unit/%.vcd : $(XC_WORK)/unit/%.hex icarus_build
 	$(MAKE) -C $(REPO_HOME)/flow/icarus run \
         SIM_UNIT_TEST=$< \
         SIM_LOG=$(XC_WORK)/unit/$(notdir $@).log

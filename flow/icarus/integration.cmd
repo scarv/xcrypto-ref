@@ -1,4 +1,5 @@
 +incdir+$(REPO_HOME)/rtl/coprocessor
+$(REPO_HOME)/rtl/coprocessor/scarv_cop_sha3.v
 $(REPO_HOME)/rtl/coprocessor/scarv_cop_aes_sbox.v
 $(REPO_HOME)/rtl/coprocessor/scarv_cop_aes.v
 $(REPO_HOME)/rtl/coprocessor/scarv_cop_cprs.v
@@ -11,6 +12,7 @@ $(REPO_HOME)/rtl/coprocessor/scarv_cop_malu.v
 $(REPO_HOME)/rtl/coprocessor/scarv_cop_rng.v
 $(REPO_HOME)/rtl/coprocessor/scarv_cop_mem.v
 $(REPO_HOME)/rtl/coprocessor/scarv_cop_top.v
+$(REPO_HOME)/rtl/integration/scarv_axi_adapter.v
 $(REPO_HOME)/rtl/integration/scarv_integ_prv_pcpi2cop.v
 $(REPO_HOME)/rtl/integration/scarv_prv_xcrypt_top.v
 $(REPO_HOME)/extern/picorv32/picorv32.v

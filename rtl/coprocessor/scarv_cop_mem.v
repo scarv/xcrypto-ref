@@ -196,11 +196,13 @@ always @(*) begin
     end
 end
 
+wire byte_op_or_sch = byte_op || is_sc_h;
+
 assign cop_mem_wdata =
-    mem_is_store && word_op     ? cpr_rs2                                  :
-    mem_is_store && halfword_op ? hw_wdata << (mem_address[1] ? 16 : 0)    :
-    mem_is_store && byte_op     ? by_wdata << {mem_address[1:0],3'b00}     :
-                                  32'b0                                    ;
+    mem_is_store && word_op         ? cpr_rs2                               :
+    mem_is_store && halfword_op_nsg ? hw_wdata << (mem_address[1] ? 16 : 0) :
+    mem_is_store && byte_op_or_sch  ? by_wdata << {mem_address[1:0], 3'b00} :
+                                      32'b0                                 ;
 
 // Memory transaction finish tracking
 wire mem_txn_good  = 

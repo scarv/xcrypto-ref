@@ -31,7 +31,7 @@ srec_file::srec_file (
             unsigned char rec_type = line[1] & 0xf;
 
             // Next two chars are the number of bytes in the record.
-            unsigned char rec_size = ((line[2] & 0xf) << 4) | (line[3] & 0xf);
+            unsigned char rec_size = (hctoi(line[2])*16) + hctoi(line[3]);
 
             unsigned char data_bytes = rec_size - 5;
 
@@ -61,7 +61,6 @@ srec_file::srec_file (
                               << std::endl;
                     continue;
             }
-                
 
             for(unsigned char i = 0; i < data_bytes; i ++  ) {
 

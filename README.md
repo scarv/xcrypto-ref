@@ -7,8 +7,8 @@
 
 <!--- -------------------------------------------------------------------- --->
 
-*A component part of the
-[SCARV](https://github.com/scarv)
+*Acting as a component part of the
+[SCARV](https://www.scarv.org)
 project,
 XCrypto is a general-purpose Instruction Set Extension (ISE) for
 [RISC-V](https://riscv.org)
@@ -79,7 +79,7 @@ a formally verified, area-optimised reference implementation of XCrypto that (e.
        [Verilator](https://www.veripool.org/wiki/verilator)
        Verilog simulator tool,
        exporting the
-       `${VERILATOR_ROOT}`
+       `VERILATOR_ROOT`
        environment variable st.
        `${VERILATOR_ROOT}/bin/verilator` 
        points at the 
@@ -111,10 +111,14 @@ a formally verified, area-optimised reference implementation of XCrypto that (e.
      source ./bin/conf.sh
      ```
 
-     to initialise the repository and configure the environment.
+     to clone and initialise the repository,
+     then configure the environment;
+     for example, you should find that the environment variable
+     `REPO_HOME`
+     is set appropriately.
 
-  3. Use targets in the top-level `Makefile` to build or execute
-     the content, e.g.,
+  3. Use targets in the top-level `Makefile` to drive a set of
+     common tasks, e.g.,
 
      - execute
 
@@ -122,10 +126,16 @@ a formally verified, area-optimised reference implementation of XCrypto that (e.
        make doc
        ```
 
-       to build the documentation:
-       you should find that
-       `${REPO_HOME}/build/doc/ref.pdf`
-       has been built.
+       to build the documentation,
+
+     - execute
+
+       ```sh
+       make clean
+       ```
+
+       to clean-up
+       (e.g., remove everything built in `${REPO_HOME}/build`).
 
 <!--- -------------------------------------------------------------------- --->
 

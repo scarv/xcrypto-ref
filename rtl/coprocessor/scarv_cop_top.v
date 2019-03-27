@@ -497,7 +497,6 @@ scarv_cop_cprs i_scarv_cop_cprs(
 //  Combinatorial Packed arithmetic and shift module.
 //
 // notes:
-//  - LMIX/HMIX expect crd value to be in palu_rs3
 //  - INS expects crd value to be in palu_rs3
 //
 scarv_cop_palu i_scarv_cop_palu (

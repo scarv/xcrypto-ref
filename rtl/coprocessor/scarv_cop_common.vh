@@ -63,8 +63,6 @@ localparam SCARV_COP_SCLASS_STR_W     = 5'd13;
 localparam SCARV_COP_SCLASS_STR_H     = 5'd14;
 localparam SCARV_COP_SCLASS_STR_B     = 5'd15;
     
-localparam SCARV_COP_SCLASS_MIX_L     = 5'd0;
-localparam SCARV_COP_SCLASS_MIX_H     = 5'd1;
 localparam SCARV_COP_SCLASS_BOP       = 5'd2;
 localparam SCARV_COP_SCLASS_INS       = 5'd3; 
 localparam SCARV_COP_SCLASS_EXT       = 5'd4;

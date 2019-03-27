@@ -15,7 +15,6 @@
 //  Combinatorial Packed arithmetic and shift module.
 //
 // notes:
-//  - LMIX/HMIX expect crd value to be in palu_rs3
 //  - LUI/LLI expect crd value to be in palu_rs3
 //  - INS expects crd value to be in palu_rs3
 //
@@ -99,8 +98,6 @@ wire        wen_cmov    =
 //  Bitwise Instructions
 //
 
-wire bw_mix_l = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_MIX_L;
-wire bw_mix_h = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_MIX_H;
 wire bw_bop  = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_BOP ;
 wire bw_ins  = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_INS ; 
 wire bw_ext  = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_EXT ;
@@ -130,15 +127,6 @@ wire [31:0] ins_result  =
     ((palu_rs1 & ins_mask) << ei_start) | 
     (palu_rs3 & ~(ins_mask << ei_start));
 
-// Result computation for the MIX instructions
-wire [ 4:0] mix_ramt = {bw_mix_h,id_imm[3:0]};
-
-wire [31:0] mix_t0   =
-    (palu_rs1 >> mix_ramt) | (palu_rs1 << (32-mix_ramt));
-
-wire [31:0] mix_result =
-    (palu_rs2 & mix_t0) | (~palu_rs2 & palu_rs3);
-
 // Result computation for the LUT instruction.
 
 wire [63:0] lut_concat = {64{bw_lut}} & {palu_rs3, palu_rs2};
@@ -160,8 +148,6 @@ wire [31:0] result_bitwise =
     {32{bw_bop }} & {bop_result                       } |
     {32{bw_ext }} & {ext_result                       } |
     {32{bw_ins }} & {ins_result                       } |
-    {32{bw_mix_l}} & {mix_result                       } |
-    {32{bw_mix_h}} & {mix_result                       } |
     {32{bw_lut}} & {lut_result                     } ;
 
 // ----------------------------------------------------------------------

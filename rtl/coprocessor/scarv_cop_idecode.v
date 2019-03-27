@@ -68,7 +68,7 @@ wire   crd_in_crs2 = dec_str_w || dec_str_h || dec_str_b;
 assign id_crs1 = dec_arg_crs1;
 assign id_crs2 = crd_in_crs2 ? dec_arg_crd : dec_arg_crs2;
 
-wire   crd_in_crs3 = dec_mix_l || dec_mix_h || dec_ins ||
+wire   crd_in_crs3 = dec_ins ||
                      dec_ld_liu  || dec_ld_hiu  || dec_ld_bu ||
                      dec_ld_hu  || dec_scatter_b || dec_scatter_h ||
                      dec_bop    ;
@@ -136,7 +136,7 @@ wire class_mp           =
     dec_macc_1 || dec_mmul_3 || dec_mclmul_3  ;
 
 wire class_bitwise      = 
-    dec_mix_l || dec_mix_h  || dec_bop    || dec_ins    || 
+    dec_bop   || dec_ins    || 
     dec_ext   || dec_ld_liu || dec_ld_hiu || dec_lut  ;
 
 wire class_aes          =
@@ -196,8 +196,6 @@ wire [4:0] subclass_mp =
     {5{dec_mclmul_3}} & {SCARV_COP_SCLASS_MCLMUL_3  } ;
 
 wire [4:0] subclass_bitwise =
-    {5{dec_mix_l}} & {SCARV_COP_SCLASS_MIX_L} |
-    {5{dec_mix_h}} & {SCARV_COP_SCLASS_MIX_H} |
     {5{dec_bop }} & {SCARV_COP_SCLASS_BOP } |
     {5{dec_ins }} & {SCARV_COP_SCLASS_INS } | 
     {5{dec_ext }} & {SCARV_COP_SCLASS_EXT } |
@@ -238,7 +236,6 @@ wire imm_8      = class_twiddle|| dec_ext     || dec_ins || class_sha3 ||
                   dec_bop;
 wire imm_sh_px  = dec_psll_i   || dec_psrl_i  || dec_prot_i;
 wire imm_sh_mp  = dec_msll_i   || dec_msrl_i;
-wire imm_rtamt  = dec_mix_l   || dec_mix_h;
 
 wire [4:0] shamt_imm =
     {dec_arg_cb, dec_arg_cc} == 2'b00 ? {dec_arg_ca, dec_arg_cshamt} :
@@ -250,8 +247,7 @@ assign id_imm =
     {32{imm_li      }} & {16'b0, encoded[31:21],encoded[19:15]            } |
     {32{imm_8       }} & {24'b0, encoded[31:24]                           } |
     {32{imm_sh_px   }} & {27'b0, shamt_imm                                } |
-    {32{imm_sh_mp   }} & {26'b0, dec_arg_cmshamt                          } |
-    {32{imm_rtamt   }} & {28'b0, dec_arg_rtamt                            } ;
+    {32{imm_sh_mp   }} & {26'b0, dec_arg_cmshamt                          } ;
 
 wire indexed_ldst = dec_ldr_w  || dec_ldr_hu || dec_ldr_bu || 
                     dec_str_w  || dec_str_h  || dec_str_b  ;

@@ -23,6 +23,10 @@ output  wire  prv_trap          , // PicoRV32 Exception
 
 //
 // PicoRV32 AXI4-lite master memory interface
+
+input wire    prv_axi_aclk      ,
+input wire    prv_axi_aresetn   ,
+
 output        prv_axi_awvalid   ,
 input         prv_axi_awready   ,
 output [31:0] prv_axi_awaddr    ,
@@ -47,6 +51,9 @@ input  [31:0] prv_axi_rdata     ,
 
 //
 // XCrypto Cop AXI4-lite master memory interface
+input wire    cop_axi_aclk      ,
+input wire    cop_axi_aresetn   ,
+
 output        cop_axi_awvalid   ,
 input         cop_axi_awready   ,
 output [31:0] cop_axi_awaddr    ,

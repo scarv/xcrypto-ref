@@ -233,7 +233,7 @@ wire imm_ld     = dec_ld_w     || dec_ld_hu   || dec_ld_bu;
 wire imm_st     = dec_st_w     || dec_st_h    || dec_st_b;
 wire imm_li     = dec_ld_hiu   || dec_ld_liu;
 wire imm_8      = class_twiddle|| class_sha3  || dec_bop;
-wire imm10      = dec_ext      || dec_ins;
+wire imm_10     = dec_ext      || dec_ins;
 wire imm_sh_px  = dec_psll_i   || dec_psrl_i  || dec_prot_i;
 wire imm_sh_mp  = dec_msll_i   || dec_msrl_i;
 

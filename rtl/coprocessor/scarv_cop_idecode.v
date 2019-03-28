@@ -232,8 +232,8 @@ assign id_subclass =
 wire imm_ld     = dec_ld_w     || dec_ld_hu   || dec_ld_bu;
 wire imm_st     = dec_st_w     || dec_st_h    || dec_st_b;
 wire imm_li     = dec_ld_hiu   || dec_ld_liu;
-wire imm_8      = class_twiddle|| dec_ext     || dec_ins || class_sha3 ||
-                  dec_bop;
+wire imm_8      = class_twiddle|| class_sha3  || dec_bop;
+wire imm10      = dec_ext      || dec_ins;
 wire imm_sh_px  = dec_psll_i   || dec_psrl_i  || dec_prot_i;
 wire imm_sh_mp  = dec_msll_i   || dec_msrl_i;
 
@@ -246,6 +246,7 @@ assign id_imm =
     {32{imm_st      }} & {{21{encoded[31]}}, encoded[31:25],encoded[10:7] } |
     {32{imm_li      }} & {16'b0, encoded[31:21],encoded[19:15]            } |
     {32{imm_8       }} & {24'b0, encoded[31:24]                           } |
+    {32{imm_10      }} & {22'b0, encoded[31:22]                           } |
     {32{imm_sh_px   }} & {27'b0, shamt_imm                                } |
     {32{imm_sh_mp   }} & {26'b0, dec_arg_cmshamt                          } ;
 

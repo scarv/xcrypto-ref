@@ -13,8 +13,8 @@
 
 `VTX_CHECKER_MODULE_BEGIN(instr_ins)
 
-wire [ 4:0] ins_begin = {dec_arg_cs,1'b0};
-wire [ 4:0] ins_len   = {dec_arg_cl,1'b0};
+wire [ 4:0] ins_begin = dec_arg_cs;
+wire [ 4:0] ins_len   = dec_arg_cl;
 
 wire [31:0] ins_mask    = (32'hFFFF_FFFF >> (32-ins_len));
 wire [31:0] ins_mask_sh = ins_mask << ins_begin;

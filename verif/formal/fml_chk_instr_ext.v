@@ -14,8 +14,8 @@
 `VTX_CHECKER_MODULE_BEGIN(instr_ext)
 
 wire [ 4:0] ext_begin = dec_arg_cs;
-wire [ 4:0] ext_len   = dec_arg_cl;
-wire [31:0] ext_mask  = 32'hFFFF_FFFF >> (32-ext_len);
+wire [ 5:0] ext_len   = dec_arg_cl+1;
+wire [31:0] ext_mask  = ~(32'hFFFF_FFFF <<(ext_len));
 wire [31:0] ext_result= (`CRS1 >> ext_begin) & ext_mask;
 
 //

@@ -116,7 +116,7 @@ endgenerate
 
 // Result computation for EXT / INST instructions
 wire [ 4:0] ei_start    = id_imm[9:5];
-wire [ 4:0] ei_len      = id_imm[4:0];
+wire [ 5:0] ei_len      = id_imm[4:0]+1;
 
 wire [31:0] ext_result  =
     (palu_rs1 >> ei_start) & ~(32'hFFFF_FFFF << ei_len);

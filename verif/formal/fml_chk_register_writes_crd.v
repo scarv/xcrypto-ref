@@ -35,7 +35,6 @@ wire expect_crd_change =
     dec_cmov_f    ||  dec_pperm_b3  ||
     dec_gather_b  ||  dec_ins       ||
     dec_gather_h  ||  dec_ext       ||
-    dec_mix_l     ||  dec_mix_h     ||
     dec_lut                         ||
     dec_aessub_enc                  ||
     dec_aessub_encrot               ||

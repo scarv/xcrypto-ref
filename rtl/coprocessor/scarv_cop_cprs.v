@@ -28,6 +28,8 @@ input  wire             g_resetn      , // Synchronous active low reset.
 `VTX_REGISTER_PORTS_OUT(cprs_snoop)
 `endif
 
+input  wire             cprs_init     , // xc.init being executed.
+
 input  wire             crs1_ren      , // Port 1 read enable
 input  wire [ 3:0]      crs1_addr     , // Port 1 address
 output wire [31:0]      crs1_rdata    , // Port 1 read data
@@ -80,6 +82,11 @@ generate for (i = 0; i < 16; i = i + 1) begin : gen_cprs
             `else
                 cprs[i] <= 32'b0;
             `endif
+
+        end else if(cprs_init) begin
+            
+            // Initialise back to zero.
+            cprs[i] <= 32'b0;
 
         end else if((|crd_wen) && (crd_addr == i)) begin
             if(crd_wen[3]) cprs[i][31:24] <= crd_wdata[31:24];

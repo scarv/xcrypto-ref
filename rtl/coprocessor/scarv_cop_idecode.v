@@ -22,6 +22,7 @@ output wire        id_exception    , // Illegal instruction exception.
 
 output wire [ 3:0] id_class        , // Instruction class.
 output wire [ 4:0] id_subclass     , // Instruction subclass.
+output wire        id_cprs_init    , // An init instruction is executing.
 
 output wire [ 2:0] id_pw           , // Instruction pack width.
 output wire [ 3:0] id_crs1         , // Instruction source register 1
@@ -226,6 +227,9 @@ assign id_subclass =
     {5{class_move        }} & {encoded[28:24]       } |
     {5{class_mp          }} & {subclass_mp          } |
     {5{class_bitwise     }} & {subclass_bitwise     } ;
+
+// Initialise registers back to zero.
+assign id_cprs_init = dec_init;
 
 //
 // Immediate decoding

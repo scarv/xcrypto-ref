@@ -83,6 +83,8 @@ wire          id_exception    ; // Illegal instruction exception.
 wire [ 3:0]   id_class        ; // Instruction class.
 wire [ 4:0]   id_subclass     ; // Instruction subclass.
 
+wire          id_cprs_init    ; // xc.init instruction executing.
+
 wire [ 2:0]   id_pw           ; // Instruction pack width.
 wire [ 3:0]   id_crs1         ; // Instruction source register 1
 wire [ 3:0]   id_crs2         ; // Instruction source register 2
@@ -331,6 +333,7 @@ generate if(FAST_COP_CPU_IF == 0) begin
     assign  fu_done         = 
         mem_idone || palu_idone || malu_idone || 
         rng_idone || aes_idone  || sha3_idone ||
+        id_cprs_init ||
         (id_exception && insn_accept);
     
     assign  insn_valid      = insn_accept ||
@@ -420,7 +423,7 @@ end else if(FAST_COP_CPU_IF == 1) begin
     assign  fu_done         = 
         mem_idone || palu_idone || malu_idone ||
         rng_idone || aes_idone  || sha3_idone ||
-        id_exception;
+        id_exception || id_cprs_init;
 
     assign  insn_valid      = cpu_insn_req;
 
@@ -450,6 +453,7 @@ scarv_cop_idecode i_scarv_cop_idecode (
 .id_class    (id_class    ), // Instruction class.
 .id_subclass (id_subclass ), // Instruction subclass.
 .id_pw       (id_pw       ), // Instruction pack width.
+.id_cprs_init(id_cprs_init), // xc.init executing.
 .id_crs1     (id_crs1     ), // Instruction source register 1
 .id_crs2     (id_crs2     ), // Instruction source register 2
 .id_crs3     (id_crs3     ), // Instruction source register 3
@@ -476,6 +480,7 @@ scarv_cop_cprs i_scarv_cop_cprs(
 `ifdef FORMAL
 `VTX_REGISTER_PORTS_RAISE(cprs_snoop)
 `endif
+.cprs_init (id_cprs_init), // Initialise back to zero.
 .crs1_ren  (crs1_ren  ), // Port 1 read enable
 .crs1_addr (crs1_addr ), // Port 1 address
 .crs1_rdata(crs1_rdata), // Port 1 read data

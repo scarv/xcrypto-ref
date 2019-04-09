@@ -18,7 +18,7 @@ localparam SCARV_COP_INSN_LD_ERR  =  3'b110;
 localparam SCARV_COP_INSN_ST_ERR  =  3'b111;
 
 localparam SCARV_COP_ICLASS_PACKED_ARITH = 4'b0001;
-localparam SCARV_COP_ICLASS_TWIDDLE      = 4'b0010;
+localparam SCARV_COP_ICLASS_PERMUTE      = 4'b0010;
 localparam SCARV_COP_ICLASS_LOADSTORE    = 4'b0011;
 localparam SCARV_COP_ICLASS_RANDOM       = 4'b0100;
 localparam SCARV_COP_ICLASS_MOVE         = 4'b0101;
@@ -38,13 +38,9 @@ localparam SCARV_COP_SCLASS_CMOV_F    = 5'b11100;
 localparam SCARV_COP_SCLASS_GPR2XCR   = 5'b00001;
 localparam SCARV_COP_SCLASS_XCR2GPR   = 5'b00000;
 
-localparam SCARV_COP_SCLASS_PPERM_W   = 5'b0000;
-localparam SCARV_COP_SCLASS_PPERM_H0  = 5'b0010;
-localparam SCARV_COP_SCLASS_PPERM_H1  = 5'b0011;
-localparam SCARV_COP_SCLASS_PPERM_B0  = 5'b0100;
-localparam SCARV_COP_SCLASS_PPERM_B1  = 5'b0101;
-localparam SCARV_COP_SCLASS_PPERM_B2  = 5'b0110;
-localparam SCARV_COP_SCLASS_PPERM_B3  = 5'b0111;
+localparam SCARV_COP_SCLASS_PERM_BIT    = 5'b00001;
+localparam SCARV_COP_SCLASS_PERM_IBIT   = 5'b00010;
+localparam SCARV_COP_SCLASS_PERM_BYTE   = 5'b00100;
     
 localparam SCARV_COP_SCLASS_SCATTER_B = 5'd0 ;
 localparam SCARV_COP_SCLASS_GATHER_B  = 5'd1 ;
@@ -63,6 +59,7 @@ localparam SCARV_COP_SCLASS_STR_W     = 5'd13;
 localparam SCARV_COP_SCLASS_STR_H     = 5'd14;
 localparam SCARV_COP_SCLASS_STR_B     = 5'd15;
     
+localparam SCARV_COP_SCLASS_BMV       = 5'd1;
 localparam SCARV_COP_SCLASS_BOP       = 5'd2;
 localparam SCARV_COP_SCLASS_INS       = 5'd3; 
 localparam SCARV_COP_SCLASS_EXT       = 5'd4;

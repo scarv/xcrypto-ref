@@ -30,7 +30,6 @@ wire [31:0] ins_result  =
 //
 `VTX_CHECK_INSTR_BEGIN(ins) 
 
-    // Result comes from the PACK_WIDTH_ARITH_OPERATION_RESULT macro.
     `VTX_ASSERT_CRD_VALUE_IS(ins_result)
 
     // Never causes writeback to GPRS

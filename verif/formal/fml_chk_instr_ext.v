@@ -23,7 +23,6 @@ wire [31:0] ext_result= (`CRS1 >> ext_begin) & ext_mask;
 //
 `VTX_CHECK_INSTR_BEGIN(ext) 
 
-    // Result comes from the PACK_WIDTH_ARITH_OPERATION_RESULT macro.
     `VTX_ASSERT_CRD_VALUE_IS(ext_result)
 
     // Never causes writeback to GPRS

@@ -154,6 +154,11 @@ wire          sha3_idone        ; // Instruction complete
 wire [ 3:0]   sha3_cpr_rd_ben   ; // Writeback byte enable
 wire [31:0]   sha3_cpr_rd_wdata ; // Writeback data
 
+wire          perm_ivalid      ; // Valid instruction input
+wire          perm_idone       ; // Instruction complete
+wire [ 3:0]   perm_cpr_rd_ben  ; // Writeback byte enable
+wire [31:0]   perm_cpr_rd_wdata; // Writeback data
+
 //
 // Functional unit dispatch
 //
@@ -164,8 +169,7 @@ assign palu_ivalid =
     insn_valid  && (
     id_class == SCARV_COP_ICLASS_PACKED_ARITH ||
     id_class == SCARV_COP_ICLASS_MOVE         ||
-    id_class == SCARV_COP_ICLASS_BITWISE      ||
-    id_class == SCARV_COP_ICLASS_TWIDDLE      );
+    id_class == SCARV_COP_ICLASS_BITWISE      );
 
 assign aes_ivalid =
     insn_valid  && (
@@ -187,6 +191,10 @@ assign rng_ivalid =
     insn_valid && (
     id_class == SCARV_COP_ICLASS_RANDOM       );
 
+assign perm_ivalid =
+    insn_valid && (
+    id_class == SCARV_COP_ICLASS_PERMUTE      );
+
 //
 // CPR Writeback data selection
 //
@@ -197,7 +205,8 @@ assign crd_wen   = palu_cpr_rd_ben |
                    mem_cpr_rd_ben  |
                    malu_cpr_rd_ben |
                    rng_cpr_rd_ben  |
-                   aes_cpr_rd_ben  ;
+                   aes_cpr_rd_ben  |
+                   perm_cpr_rd_ben ;
 
 assign crd_addr  = !malu_ivalid ? id_crd :
                    !malu_idone  ? id_crd1:
@@ -207,7 +216,8 @@ assign crd_wdata = palu_cpr_rd_wdata |
                    mem_cpr_rd_wdata  |
                    malu_cpr_rd_wdata |
                    rng_cpr_rd_wdata  |
-                   aes_cpr_rd_wdata  ;
+                   aes_cpr_rd_wdata  |
+                   perm_cpr_rd_wdata ;
 
 //
 // GPR Writeback data and instruction result selection
@@ -333,7 +343,7 @@ generate if(FAST_COP_CPU_IF == 0) begin
     assign  fu_done         = 
         mem_idone || palu_idone || malu_idone || 
         rng_idone || aes_idone  || sha3_idone ||
-        id_cprs_init ||
+        id_cprs_init || perm_idone ||
         (id_exception && insn_accept);
     
     assign  insn_valid      = insn_accept ||
@@ -423,7 +433,7 @@ end else if(FAST_COP_CPU_IF == 1) begin
     assign  fu_done         = 
         mem_idone || palu_idone || malu_idone ||
         rng_idone || aes_idone  || sha3_idone ||
-        id_exception || id_cprs_init;
+        id_exception || id_cprs_init || perm_idone;
 
     assign  insn_valid      = cpu_insn_req;
 
@@ -620,6 +630,26 @@ scarv_cop_malu i_scarv_cop_malu (
 );
 
 
+//
+// instance: scarv_cop_permute
+//
+//  Bit level permutation instructions.
+//
+scarv_cop_permute i_scarv_cop_permute (
+.perm_ivalid      (perm_ivalid      ), // Valid instruction input
+.perm_idone       (perm_idone       ), // Instruction complete
+.perm_rs1         (crs1_rdata       ), // Source register 1
+.perm_rs3         (crs3_rdata       ), // Source register 3 / rd
+.id_imm           (id_imm           ), // Source immedate
+.id_subclass      (id_subclass      ), // Instruction subclass
+.perm_cpr_rd_ben  (perm_cpr_rd_ben  ), // Writeback byte enable
+.perm_cpr_rd_wdata(perm_cpr_rd_wdata)  // Writeback data
+);
+
+
+//
+// Random number generator
+//
 scarv_cop_rng i_scarv_cop_rng(
 .g_clk           (g_clk           ), // Global clock
 .g_resetn        (g_resetn        ), // Synchronous active low reset.

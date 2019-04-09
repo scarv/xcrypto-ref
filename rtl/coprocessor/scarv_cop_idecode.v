@@ -69,10 +69,10 @@ wire   crd_in_crs2 = dec_str_w || dec_str_h || dec_str_b;
 assign id_crs1 = dec_arg_crs1;
 assign id_crs2 = crd_in_crs2 ? dec_arg_crd : dec_arg_crs2;
 
-wire   crd_in_crs3 = dec_ins ||
+wire   crd_in_crs3 = dec_ins || dec_bmv || dec_pbit || dec_ipbit ||
                      dec_ld_liu  || dec_ld_hiu  || dec_ld_bu ||
                      dec_ld_hu  || dec_scatter_b || dec_scatter_h ||
-                     dec_bop    ;
+                     dec_bop;
 
 assign id_crs3 = crd_in_crs3 ? dec_arg_crd : dec_arg_crs3;
 
@@ -114,9 +114,7 @@ wire class_packed_arith =
     dec_psrl  || dec_prot  || dec_psll_i || dec_psrl_i || 
     dec_prot_i|| dec_pmul_h|| dec_pclmul_l|| dec_pclmul_h;
 
-wire class_twiddle      = 
-    dec_pperm_w  || dec_pperm_h0 || dec_pperm_h1 || dec_pperm_b0 ||
-    dec_pperm_b1 || dec_pperm_b2 || dec_pperm_b3  ;
+wire class_permute = dec_pbit || dec_ipbit || dec_pbyte;
 
 wire class_loadstore    = 
     dec_scatter_b || dec_gather_b  || dec_scatter_h || dec_gather_h  ||
@@ -137,7 +135,7 @@ wire class_mp           =
     dec_macc_1 || dec_mmul_3 || dec_mclmul_3  ;
 
 wire class_bitwise      = 
-    dec_bop   || dec_ins    || 
+    dec_bop   || dec_ins    || dec_bmv    ||
     dec_ext   || dec_ld_liu || dec_ld_hiu || dec_lut  ;
 
 wire class_aes          =
@@ -151,7 +149,7 @@ assign id_class =
     {4{class_sha3        }} & SCARV_COP_ICLASS_SHA3         |
     {4{class_aes         }} & SCARV_COP_ICLASS_AES          |
     {4{class_packed_arith}} & SCARV_COP_ICLASS_PACKED_ARITH |
-    {4{class_twiddle     }} & SCARV_COP_ICLASS_TWIDDLE      |
+    {4{class_permute     }} & SCARV_COP_ICLASS_PERMUTE      |
     {4{class_loadstore   }} & SCARV_COP_ICLASS_LOADSTORE    |
     {4{class_random      }} & SCARV_COP_ICLASS_RANDOM       |
     {4{class_move        }} & SCARV_COP_ICLASS_MOVE         |
@@ -198,11 +196,17 @@ wire [4:0] subclass_mp =
 
 wire [4:0] subclass_bitwise =
     {5{dec_bop }} & {SCARV_COP_SCLASS_BOP } |
+    {5{dec_bmv }} & {SCARV_COP_SCLASS_BMV } | 
     {5{dec_ins }} & {SCARV_COP_SCLASS_INS } | 
     {5{dec_ext }} & {SCARV_COP_SCLASS_EXT } |
     {5{dec_ld_liu }} & {SCARV_COP_SCLASS_LD_LIU } |
     {5{dec_ld_hiu }} & {SCARV_COP_SCLASS_LD_HIU } |
     {5{dec_lut}} & {SCARV_COP_SCLASS_LUT} ;
+
+wire [4:0] subclass_permute =
+    {5{dec_pbit }} & SCARV_COP_SCLASS_PERM_BIT |
+    {5{dec_ipbit}} & SCARV_COP_SCLASS_PERM_IBIT|
+    {5{dec_pbyte}} & SCARV_COP_SCLASS_PERM_BYTE;
     
 wire [4:0] subclass_aes = 
     {5{dec_aessub_enc   }} & SCARV_COP_SCLASS_AESSUB_ENC    |
@@ -221,7 +225,7 @@ assign id_subclass =
     {5{class_sha3        }} & {subclass_sha3        } |
     {5{class_aes         }} & {subclass_aes         } |
     {5{class_packed_arith}} & {encoded[29:25]       } |
-    {5{class_twiddle     }} & {1'b0, encoded[23:21] } |
+    {5{class_permute     }} & {subclass_permute     } |
     {5{class_loadstore   }} & {subclass_load_store  } |
     {5{class_random      }} & {encoded[24:20]       } |
     {5{class_move        }} & {encoded[28:24]       } |
@@ -236,8 +240,9 @@ assign id_cprs_init = dec_init;
 wire imm_ld     = dec_ld_w     || dec_ld_hu   || dec_ld_bu;
 wire imm_st     = dec_st_w     || dec_st_h    || dec_st_b;
 wire imm_li     = dec_ld_hiu   || dec_ld_liu;
-wire imm_8      = class_twiddle|| class_sha3  || dec_bop;
-wire imm_10     = dec_ext      || dec_ins;
+wire imm_8      = class_sha3   || dec_bop;
+wire imm_10     = dec_ext      || dec_ins     || dec_bmv || dec_pbit ||
+                  dec_ipbit    || dec_pbyte;
 wire imm_sh_px  = dec_psll_i   || dec_psrl_i  || dec_prot_i;
 wire imm_sh_mp  = dec_msll_i   || dec_msrl_i;
 

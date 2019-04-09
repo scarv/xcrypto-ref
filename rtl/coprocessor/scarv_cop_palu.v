@@ -15,8 +15,8 @@
 //  Combinatorial Packed arithmetic and shift module.
 //
 // notes:
-//  - LUI/LLI expect crd value to be in palu_rs3
-//  - INS expects crd value to be in palu_rs3
+//  - INS, BMV, ld.[l|h]iu, scatter/gather, ld.hu, ld.bu expects
+//    crd value to be in palu_rs3
 //
 module scarv_cop_palu (
 input  wire         g_clk            ,
@@ -56,23 +56,19 @@ wire is_bitwise_insn =
 wire is_parith_insn = 
     palu_ivalid && id_class == SCARV_COP_ICLASS_PACKED_ARITH;
 
-wire is_twid_insn = 
-    palu_ivalid && id_class == SCARV_COP_ICLASS_TWIDDLE;
-
 //
 // Result data muxing
 assign palu_cpr_rd_wdata = 
     {32{is_mov_insn     }} & result_cmov    |
     {32{is_bitwise_insn }} & result_bitwise |
-    {32{is_parith_insn  }} & result_parith  |
-    {32{is_twid_insn    }} & result_twid    ;
+    {32{is_parith_insn  }} & result_parith  ;
 
 //
 // Should the result be written back?
 assign palu_cpr_rd_ben = {4{palu_idone}} & (
-    is_mov_insn                                       ? {4{wen_cmov}} :
-    is_bitwise_insn || is_parith_insn || is_twid_insn ? 4'hF          :
-                                                        4'h0         );
+    is_mov_insn                       ? {4{wen_cmov}} :
+    is_bitwise_insn || is_parith_insn ? 4'hF          :
+                                        4'h0         );
 
 // ----------------------------------------------------------------------
 
@@ -99,6 +95,7 @@ wire        wen_cmov    =
 //
 
 wire bw_bop  = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_BOP ;
+wire bw_bmv  = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_BMV ; 
 wire bw_ins  = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_INS ; 
 wire bw_ext  = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_EXT ;
 wire bw_ld_liu = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_LD_LIU;
@@ -114,18 +111,24 @@ generate for (br = 0; br < 32; br = br + 1)
     ];
 endgenerate
 
-// Result computation for EXT / INST instructions
-wire [ 4:0] ei_start    = id_imm[9:5];
-wire [ 5:0] ei_len      = id_imm[4:0]+1;
+// Result computation for xc.bmv instruction.
+
+
+// Result computation for EXT / INS / BMV instructions
+wire [ 4:0] e_start     =                         id_imm[9:5]   ;
+wire [ 4:0] i_start     = bw_bmv ? id_imm[4:0]  : id_imm[9:5]   ;
+wire [ 5:0] ei_len      = bw_bmv ? 1'b1         : id_imm[4:0]+1 ;
 
 wire [31:0] ext_result  =
-    (palu_rs1 >> ei_start) & ~(32'hFFFF_FFFF << ei_len);
+    (palu_rs1 >> e_start) & ~(32'hFFFF_FFFF << ei_len);
 
 wire [31:0] ins_mask    = 32'hFFFF_FFFF >> (32-ei_len);
 
+wire [31:0] ins_input   = bw_bmv ? ext_result : palu_rs1;
+
 wire [31:0] ins_result  =
-    ((palu_rs1 & ins_mask) << ei_start) | 
-    (palu_rs3 & ~(ins_mask << ei_start));
+    ((ins_input & ins_mask) << i_start) | 
+    (palu_rs3 & ~(ins_mask << i_start));
 
 // Result computation for the LUT instruction.
 
@@ -144,101 +147,12 @@ end endgenerate
 wire [31:0] result_bitwise = 
     {32{bw_ld_liu}} & {palu_rs3[31:16], id_imm[15:0]    } |
     {32{bw_ld_hiu}} & {id_imm[15:0]   , palu_rs3[15: 0] } |
+    {32{bw_bmv }} & {ins_result                       } |
     {32{bw_bop }} & {bop_result                       } |
     {32{bw_bop }} & {bop_result                       } |
     {32{bw_ext }} & {ext_result                       } |
     {32{bw_ins }} & {ins_result                       } |
     {32{bw_lut}} & {lut_result                     } ;
-
-// ----------------------------------------------------------------------
-
-//
-//  Twiddle Instructions
-//
-
-wire pperm_w  = is_twid_insn && id_subclass == SCARV_COP_SCLASS_PPERM_W ;
-wire pperm_h0 = is_twid_insn && id_subclass == SCARV_COP_SCLASS_PPERM_H0;
-wire pperm_h1 = is_twid_insn && id_subclass == SCARV_COP_SCLASS_PPERM_H1;
-wire pperm_b0 = is_twid_insn && id_subclass == SCARV_COP_SCLASS_PPERM_B0;
-wire pperm_b1 = is_twid_insn && id_subclass == SCARV_COP_SCLASS_PPERM_B1;
-wire pperm_b2 = is_twid_insn && id_subclass == SCARV_COP_SCLASS_PPERM_B2;
-wire pperm_b3 = is_twid_insn && id_subclass == SCARV_COP_SCLASS_PPERM_B3;
-
-// Input signals to the twiddle logic
-wire [7:0] pperm_w_in  [3:0];
-wire [3:0] twid_n_in  [3:0];
-wire [1:0] twid_c_in  [3:0];
-
-// Output signals from the twiddle logic
-wire [31:0] pperm_w_out;
-wire [15:0] twid_n_out;
-wire [ 7:0] twid_c_out;
-
-// Result signals for the writeback logic
-wire [31:0] pperm_w_result;
-wire [31:0] twid_n_result;
-wire [31:0] twid_c_result;
-
-// Twiddle select indexes from instruction immediate
-wire [1:0] b0  = id_imm[7:6];
-wire [1:0] b1  = id_imm[5:4];
-wire [1:0] b2  = id_imm[3:2];
-wire [1:0] b3  = id_imm[1:0];
-
-// Input halfword to twid.nX
-wire [15:0] twid_n_hw = pperm_h0 ? palu_rs1[15:0] : palu_rs1[31:16];
-
-// Input byte to twid.cX
-wire [ 7:0] twid_c_b  =
-    {8{pperm_b3}} & palu_rs1[31:24] |
-    {8{pperm_b2}} & palu_rs1[23:16] |
-    {8{pperm_b1}} & palu_rs1[15: 8] |
-    {8{pperm_b0}} & palu_rs1[ 7: 0] ;
-
-// Twiddle byte input array
-assign pperm_w_in[3] = palu_rs1[31:24];
-assign pperm_w_in[2] = palu_rs1[23:16];
-assign pperm_w_in[1] = palu_rs1[15: 8];
-assign pperm_w_in[0] = palu_rs1[ 7: 0];
-
-// Twiddle nibble input array
-assign twid_n_in[3] = twid_n_hw[15:12];
-assign twid_n_in[2] = twid_n_hw[11: 8];
-assign twid_n_in[1] = twid_n_hw[ 7: 4];
-assign twid_n_in[0] = twid_n_hw[ 3: 0];
-
-// Twiddle crumb input array.
-assign twid_c_in[3] = twid_c_b[7:6];
-assign twid_c_in[2] = twid_c_b[5:4];
-assign twid_c_in[1] = twid_c_b[3:2];
-assign twid_c_in[0] = twid_c_b[1:0];
-
-// Output array gathering
-assign pperm_w_out = 
-    {pperm_w_in[b3], pperm_w_in[b2], pperm_w_in[b1], pperm_w_in[b0]};
-
-assign twid_n_out =
-    {twid_n_in[b3], twid_n_in[b2], twid_n_in[b1], twid_n_in[b0]};
-
-assign twid_c_out =
-    {twid_c_in[b3], twid_c_in[b2], twid_c_in[b1], twid_c_in[b0]};
-
-// Result construction
-assign pperm_w_result = 
-    {32{pperm_w}} & pperm_w_out;
-
-assign twid_n_result = 
-    {32{pperm_h0}} & {palu_rs1[31:16], twid_n_out} |
-    {32{pperm_h1}} & {twid_n_out, palu_rs1[15: 0]} ;
-
-assign twid_c_result = 
-{32{pperm_b0}} & {palu_rs1[31:24],palu_rs1[23:16],palu_rs1[15:8],twid_c_out} |
-{32{pperm_b1}} & {palu_rs1[31:24],palu_rs1[23:16],twid_c_out, palu_rs1[7:0]} |
-{32{pperm_b2}} & {palu_rs1[31:24],twid_c_out, palu_rs1[15:8], palu_rs1[7:0]} |
-{32{pperm_b3}} & {twid_c_out, palu_rs1[23:16],palu_rs1[15:8], palu_rs1[7:0]} ;
-
-wire [31:0] result_twid = 
-    pperm_w_result | twid_n_result | twid_c_result;
 
 // ----------------------------------------------------------------------
 

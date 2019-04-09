@@ -44,4 +44,7 @@ $(SMTDIR)/instr_pclmul_l_pw2.cov : BMC_STEPS=21
 $(SMTDIR)/instr_pclmul_l_pw1.rpt : BMC_STEPS=37
 $(SMTDIR)/instr_pclmul_l_pw1.cov : BMC_STEPS=37
 
+$(SMTDIR)/instr_init.rpt     : BMC_STEPS=21
+$(SMTDIR)/instr_init.cov     : BMC_STEPS=21
+
 $(SMTDIR)/protocols.rpt        : BMC_STEPS=40

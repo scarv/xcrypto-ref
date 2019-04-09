@@ -24,8 +24,7 @@ output wire         aes_idone       , // Instruction complete
 input  wire [31:0]  aes_rs1         , // Source register 1
 input  wire [31:0]  aes_rs2         , // Source register 2
 
-input  wire [ 3:0]  id_class        , // Instruction class
-input  wire [ 4:0]  id_subclass     , // Instruction subclass
+input  wire [14:0]  id_subclass     , // Instruction subclass
 
 output wire [ 3:0]  aes_cpr_rd_ben  , // Writeback byte enable
 output wire [31:0]  aes_cpr_rd_wdata  // Writeback data
@@ -36,12 +35,12 @@ output wire [31:0]  aes_cpr_rd_wdata  // Writeback data
 
 //
 // Individual instruction signals
-wire sub_enc    = aes_ivalid && id_subclass == SCARV_COP_SCLASS_AESSUB_ENC;
-wire sub_encrot = aes_ivalid && id_subclass == SCARV_COP_SCLASS_AESSUB_ENCROT;
-wire sub_dec    = aes_ivalid && id_subclass == SCARV_COP_SCLASS_AESSUB_DEC;
-wire sub_decrot = aes_ivalid && id_subclass == SCARV_COP_SCLASS_AESSUB_DECROT;
-wire mix_enc    = aes_ivalid && id_subclass == SCARV_COP_SCLASS_AESMIX_ENC;
-wire mix_dec    = aes_ivalid && id_subclass == SCARV_COP_SCLASS_AESMIX_DEC;
+wire sub_enc    = aes_ivalid && id_subclass[SCARV_COP_SCLASS_AESSUB_ENC];
+wire sub_encrot = aes_ivalid && id_subclass[SCARV_COP_SCLASS_AESSUB_ENCROT];
+wire sub_dec    = aes_ivalid && id_subclass[SCARV_COP_SCLASS_AESSUB_DEC];
+wire sub_decrot = aes_ivalid && id_subclass[SCARV_COP_SCLASS_AESSUB_DECROT];
+wire mix_enc    = aes_ivalid && id_subclass[SCARV_COP_SCLASS_AESMIX_ENC];
+wire mix_dec    = aes_ivalid && id_subclass[SCARV_COP_SCLASS_AESMIX_DEC];
 
 wire mix_instr  = mix_enc || mix_dec;
 wire sub_instr  = sub_enc || sub_encrot || sub_dec || sub_decrot;

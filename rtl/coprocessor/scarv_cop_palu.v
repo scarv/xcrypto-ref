@@ -32,8 +32,8 @@ input  wire [31:0]  palu_rs3         , // Source register 3
 
 input  wire [31:0]  id_imm           , // Source immedate
 input  wire [ 2:0]  id_pw            , // Pack width
-input  wire [ 3:0]  id_class         , // Instruction class
-input  wire [ 4:0]  id_subclass      , // Instruction subclass
+input  wire [ 8:0]  id_class         , // Instruction class
+input  wire [14:0]  id_subclass      , // Instruction subclass
 
 output wire [ 3:0]  palu_cpr_rd_ben  , // Writeback byte enable
 output wire [31:0]  palu_cpr_rd_wdata  // Writeback data
@@ -48,13 +48,13 @@ assign palu_idone = palu_ivalid &&
 
 // Detect which subclass of instruction to execute.
 wire is_mov_insn  = 
-    palu_ivalid && id_class == SCARV_COP_ICLASS_MOVE;
+    palu_ivalid && id_class[SCARV_COP_ICLASS_MOVE];
 
 wire is_bitwise_insn = 
-    palu_ivalid && id_class == SCARV_COP_ICLASS_BITWISE;
+    palu_ivalid && id_class[SCARV_COP_ICLASS_BITWISE];
 
 wire is_parith_insn = 
-    palu_ivalid && id_class == SCARV_COP_ICLASS_PACKED_ARITH;
+    palu_ivalid && id_class[SCARV_COP_ICLASS_PACKED_ARITH];
 
 //
 // Result data muxing
@@ -79,9 +79,9 @@ assign palu_cpr_rd_ben = {4{palu_idone}} & (
 wire        cmov_cond   = palu_rs2 != 0;
 wire [31:0] result_cmov = is_gpr2xcr ? gpr_rs1 : palu_rs1;
 
-wire  is_cmov_t = is_mov_insn && id_subclass == SCARV_COP_SCLASS_CMOV_T  ;
-wire  is_cmov_f = is_mov_insn && id_subclass == SCARV_COP_SCLASS_CMOV_F  ;
-wire  is_gpr2xcr = is_mov_insn && id_subclass == SCARV_COP_SCLASS_GPR2XCR;
+wire  is_cmov_t  = is_mov_insn && id_subclass[SCARV_COP_SCLASS_CMOV_T ];
+wire  is_cmov_f  = is_mov_insn && id_subclass[SCARV_COP_SCLASS_CMOV_F ];
+wire  is_gpr2xcr = is_mov_insn && id_subclass[SCARV_COP_SCLASS_GPR2XCR];
 
 wire        wen_cmov    = 
         (is_gpr2xcr             ) ||
@@ -94,13 +94,13 @@ wire        wen_cmov    =
 //  Bitwise Instructions
 //
 
-wire bw_bop  = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_BOP ;
-wire bw_bmv  = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_BMV ; 
-wire bw_ins  = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_INS ; 
-wire bw_ext  = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_EXT ;
-wire bw_ld_liu = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_LD_LIU;
-wire bw_ld_hiu = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_LD_HIU;
-wire bw_lut   = is_bitwise_insn && id_subclass == SCARV_COP_SCLASS_LUT;
+wire bw_bop    = is_bitwise_insn && id_subclass[SCARV_COP_SCLASS_BOP   ];
+wire bw_bmv    = is_bitwise_insn && id_subclass[SCARV_COP_SCLASS_BMV   ]; 
+wire bw_ins    = is_bitwise_insn && id_subclass[SCARV_COP_SCLASS_INS   ]; 
+wire bw_ext    = is_bitwise_insn && id_subclass[SCARV_COP_SCLASS_EXT   ];
+wire bw_ld_liu = is_bitwise_insn && id_subclass[SCARV_COP_SCLASS_LD_LIU];
+wire bw_ld_hiu = is_bitwise_insn && id_subclass[SCARV_COP_SCLASS_LD_HIU];
+wire bw_lut    = is_bitwise_insn && id_subclass[SCARV_COP_SCLASS_LUT   ];
 
 // Result computation for the BOP.cr instruction
 wire [31:0] bop_result;
@@ -161,18 +161,18 @@ wire [31:0] result_bitwise =
 //
 
 
-wire is_padd  = is_parith_insn && id_subclass == SCARV_COP_SCLASS_PADD;
-wire is_psub  = is_parith_insn && id_subclass == SCARV_COP_SCLASS_PSUB;
-wire is_pmul_l  = is_parith_insn && id_subclass == SCARV_COP_SCLASS_PMUL_L;
-wire is_pmul_h  = is_parith_insn && id_subclass == SCARV_COP_SCLASS_PMUL_H;
-wire is_pclmul_l= is_parith_insn && id_subclass == SCARV_COP_SCLASS_PCLMUL_L;
-wire is_pclmul_h= is_parith_insn && id_subclass == SCARV_COP_SCLASS_PCLMUL_H;
-wire is_psll  = is_parith_insn && id_subclass == SCARV_COP_SCLASS_PSLL;
-wire is_psrl  = is_parith_insn && id_subclass == SCARV_COP_SCLASS_PSRL;
-wire is_prot  = is_parith_insn && id_subclass == SCARV_COP_SCLASS_PROT;
-wire is_psll_i = is_parith_insn && id_subclass == SCARV_COP_SCLASS_PSLL_I;
-wire is_psrl_i = is_parith_insn && id_subclass == SCARV_COP_SCLASS_PSRL_I;
-wire is_prot_i = is_parith_insn && id_subclass == SCARV_COP_SCLASS_PROT_I;
+wire is_padd    = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PADD];
+wire is_psub    = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PSUB];
+wire is_pmul_l  = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PMUL_L];
+wire is_pmul_h  = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PMUL_H];
+wire is_pclmul_l= is_parith_insn && id_subclass[SCARV_COP_SCLASS_PCLMUL_L];
+wire is_pclmul_h= is_parith_insn && id_subclass[SCARV_COP_SCLASS_PCLMUL_H];
+wire is_psll    = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PSLL];
+wire is_psrl    = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PSRL];
+wire is_prot    = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PROT];
+wire is_psll_i  = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PSLL_I];
+wire is_psrl_i  = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PSRL_I];
+wire is_prot_i  = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PROT_I];
 
 wire [31:0] result_parith;
     

@@ -80,8 +80,8 @@ parameter FAST_COP_CPU_IF = 0;
 
 wire          id_exception    ; // Illegal instruction exception.
 
-wire [ 3:0]   id_class        ; // Instruction class.
-wire [ 4:0]   id_subclass     ; // Instruction subclass.
+wire [ 8:0]   id_class        ; // Instruction class.
+wire [14:0]   id_subclass     ; // Instruction subclass.
 
 wire          id_cprs_init    ; // xc.init instruction executing.
 wire          cprs_init_done  ; // xc.init instruction finished.
@@ -168,33 +168,21 @@ wire [31:0]   perm_cpr_rd_wdata; // Writeback data
 
 assign palu_ivalid = 
     insn_valid  && (
-    id_class == SCARV_COP_ICLASS_PACKED_ARITH ||
-    id_class == SCARV_COP_ICLASS_MOVE         ||
-    id_class == SCARV_COP_ICLASS_BITWISE      );
+    id_class[SCARV_COP_ICLASS_PACKED_ARITH] ||
+    id_class[SCARV_COP_ICLASS_MOVE        ] ||
+    id_class[SCARV_COP_ICLASS_BITWISE     ] );
 
-assign aes_ivalid =
-    insn_valid  && (
-    id_class == SCARV_COP_ICLASS_AES          );
+assign aes_ivalid   = insn_valid && id_class[SCARV_COP_ICLASS_AES];
 
-assign sha3_ivalid =
-    insn_valid  && (
-    id_class == SCARV_COP_ICLASS_SHA3         );
+assign sha3_ivalid  = insn_valid && id_class[SCARV_COP_ICLASS_SHA3];
 
-assign malu_ivalid =
-    insn_valid  && (
-    id_class == SCARV_COP_ICLASS_MP           );
+assign malu_ivalid  = insn_valid && id_class[SCARV_COP_ICLASS_MP];
 
-assign mem_ivalid  =
-    insn_valid  && (
-    id_class == SCARV_COP_ICLASS_LOADSTORE    );
+assign mem_ivalid   = insn_valid && id_class[SCARV_COP_ICLASS_LOADSTORE];
 
-assign rng_ivalid =
-    insn_valid && (
-    id_class == SCARV_COP_ICLASS_RANDOM       );
+assign rng_ivalid   = insn_valid && id_class[SCARV_COP_ICLASS_RANDOM];
 
-assign perm_ivalid =
-    insn_valid && (
-    id_class == SCARV_COP_ICLASS_PERMUTE      );
+assign perm_ivalid  = insn_valid && id_class[SCARV_COP_ICLASS_PERMUTE];
 
 //
 // CPR Writeback data selection
@@ -235,21 +223,21 @@ wire [ 2:0] n_cop_result; // COP execution result
 assign n_cop_waddr = id_rd;
 
 assign n_cop_wen   = 
-    (id_class     == SCARV_COP_ICLASS_MOVE    &&
-     id_subclass  == SCARV_COP_SCLASS_XCR2GPR   )  ||
-    (id_class     == SCARV_COP_ICLASS_SHA3      )  ||
-    (id_class     == SCARV_COP_ICLASS_RANDOM  &&
-     id_subclass  == SCARV_COP_SCLASS_RTEST     )  ||
-    (id_class     == SCARV_COP_ICLASS_MP      &&
-     (id_subclass == SCARV_COP_SCLASS_MEQU ||
-      id_subclass == SCARV_COP_SCLASS_MLTE ||
-      id_subclass == SCARV_COP_SCLASS_MGTE ) )   ;
+    (id_class[SCARV_COP_ICLASS_MOVE]    &&
+     id_subclass[SCARV_COP_SCLASS_XCR2GPR]   )  ||
+    (id_class[SCARV_COP_ICLASS_SHA3  ]          )  ||
+    (id_class[SCARV_COP_ICLASS_RANDOM]  &&
+     id_subclass[SCARV_COP_SCLASS_RTEST]     )  ||
+    (id_class[SCARV_COP_ICLASS_MP]      &&
+     (id_subclass[SCARV_COP_SCLASS_MEQU] ||
+      id_subclass[SCARV_COP_SCLASS_MLTE] ||
+      id_subclass[SCARV_COP_SCLASS_MGTE] ) )   ;
 
 assign n_cop_wdata = 
-    id_class == SCARV_COP_ICLASS_MOVE   ? palu_cpr_rd_wdata : 
-    id_class == SCARV_COP_ICLASS_SHA3   ? sha3_cpr_rd_wdata : 
-    id_class == SCARV_COP_ICLASS_RANDOM ? rng_cpr_rd_wdata  : 
-                                          malu_cpr_rd_wdata ;
+    id_class[SCARV_COP_ICLASS_MOVE  ] ? palu_cpr_rd_wdata : 
+    id_class[SCARV_COP_ICLASS_SHA3  ] ? sha3_cpr_rd_wdata : 
+    id_class[SCARV_COP_ICLASS_RANDOM] ? rng_cpr_rd_wdata  : 
+                                        malu_cpr_rd_wdata ;
 
 //
 //  and/or the result of the instruction together. Note
@@ -547,7 +535,6 @@ scarv_cop_aes i_scarv_cop_aes(
 .aes_idone        (aes_idone       ), // Instruction complete
 .aes_rs1          (crs1_rdata      ), // Source register 1
 .aes_rs2          (crs2_rdata      ), // Source register 2
-.id_class         (id_class        ), // Instruction class
 .id_subclass      (id_subclass     ), // Instruction subclass
 .aes_cpr_rd_ben   (aes_cpr_rd_ben  ), // Writeback byte enable
 .aes_cpr_rd_wdata (aes_cpr_rd_wdata)  // Writeback data
@@ -566,7 +553,6 @@ scarv_cop_sha3 i_scarv_cop_sha3 (
 .sha3_idone       (sha3_idone      ), // Instruction complete
 .sha3_rs1         (u_rs1           ), // Source register 1
 .sha3_rs2         (u_rs2           ), // Source register 2
-.id_class         (id_class        ), // Instruction class
 .id_subclass      (id_subclass     ), // Instruction subclass
 .id_imm           (id_imm           ), // Source immedate
 .sha3_cpr_rd_ben  (sha3_cpr_rd_ben  ), // Writeback byte enable
@@ -594,7 +580,6 @@ scarv_cop_mem i_scarv_cop_mem (
 .id_wb_h         (id_wb_h         ), // Halfword index (load/store)
 .id_wb_b         (id_wb_b         ), // Byte index (load/store)
 .id_imm          (id_imm          ), // Source immedate
-.id_class        (id_class        ), // Instruction class
 .id_subclass     (id_subclass     ), // Instruction subclass
 .mem_cpr_rd_ben  (mem_cpr_rd_ben  ), // Writeback byte enable
 .mem_cpr_rd_wdata(mem_cpr_rd_wdata), // Writeback data
@@ -625,7 +610,6 @@ scarv_cop_malu i_scarv_cop_malu (
 .malu_rs2         (crs2_rdata       ), // Source register 2
 .malu_rs3         (crs3_rdata       ), // Source register 3
 .id_imm           (id_imm           ), // Source immedate
-.id_class         (id_class         ), // Instruction class
 .id_subclass      (id_subclass      ), // Instruction subclass
 .malu_cpr_rd_ben  (malu_cpr_rd_ben  ), // Writeback byte enable
 .malu_cpr_rd_wdata(malu_cpr_rd_wdata)  // Writeback data
@@ -663,7 +647,6 @@ scarv_cop_rng i_scarv_cop_rng(
 `endif
 .rng_rs1         (crs1_rdata      ), // Source register 1
 .id_imm          (id_imm          ), // Source immedate
-.id_class        (id_class        ), // Instruction class
 .id_subclass     (id_subclass     ), // Instruction subclass
 .rng_cpr_rd_ben  (rng_cpr_rd_ben  ), // Writeback byte enable
 .rng_cpr_rd_wdata(rng_cpr_rd_wdata) // Writeback data

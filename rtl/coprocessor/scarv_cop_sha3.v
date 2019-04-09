@@ -25,8 +25,7 @@ output wire         sha3_idone      , // Instruction complete
 input  wire [31:0]  sha3_rs1         , // Source register 1
 input  wire [31:0]  sha3_rs2         , // Source register 2
 
-input  wire [ 3:0]  id_class         , // Instruction class
-input  wire [ 4:0]  id_subclass      , // Instruction subclass
+input  wire [14:0]  id_subclass      , // Instruction subclass
 input  wire [31:0]  id_imm           , // Immediate
 
 output wire [ 3:0]  sha3_cpr_rd_ben  , // Writeback byte enable
@@ -39,11 +38,11 @@ output reg  [31:0]  sha3_cpr_rd_wdata  // Writeback data
 
 assign sha3_idone      = sha3_ivalid;
 
-wire sha3_xy  = sha3_ivalid && id_subclass == SCARV_COP_SCLASS_SHA3_XY;
-wire sha3_x1  = sha3_ivalid && id_subclass == SCARV_COP_SCLASS_SHA3_X1;
-wire sha3_x2  = sha3_ivalid && id_subclass == SCARV_COP_SCLASS_SHA3_X2;
-wire sha3_x4  = sha3_ivalid && id_subclass == SCARV_COP_SCLASS_SHA3_X4;
-wire sha3_yx  = sha3_ivalid && id_subclass == SCARV_COP_SCLASS_SHA3_YX;
+wire sha3_xy  = sha3_ivalid && id_subclass[SCARV_COP_SCLASS_SHA3_XY];
+wire sha3_x1  = sha3_ivalid && id_subclass[SCARV_COP_SCLASS_SHA3_X1];
+wire sha3_x2  = sha3_ivalid && id_subclass[SCARV_COP_SCLASS_SHA3_X2];
+wire sha3_x4  = sha3_ivalid && id_subclass[SCARV_COP_SCLASS_SHA3_X4];
+wire sha3_yx  = sha3_ivalid && id_subclass[SCARV_COP_SCLASS_SHA3_YX];
 
 assign sha3_cpr_rd_ben = 0;
 

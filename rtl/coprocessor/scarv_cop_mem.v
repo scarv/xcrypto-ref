@@ -34,8 +34,7 @@ input  wire [31:0]  cpr_rs3          , // Source register 3
 input  wire         id_wb_h          , // Halfword index (load/store)
 input  wire         id_wb_b          , // Byte index (load/store)
 input  wire [31:0]  id_imm           , // Source immedate
-input  wire [ 3:0]  id_class         , // Instruction class
-input  wire [ 4:0]  id_subclass      , // Instruction subclass
+input  wire [14:0]  id_subclass      , // Instruction subclass
 
 output wire [ 3:0]  mem_cpr_rd_ben   , // Writeback byte enable
 output wire [31:0]  mem_cpr_rd_wdata , // Writeback data
@@ -57,20 +56,20 @@ input  wire         cop_mem_error      // Error
 
 wire mem_is_load;
 
-wire is_mem  = mem_ivalid && id_class == SCARV_COP_ICLASS_LOADSTORE;
+wire is_mem  = mem_ivalid;
 
-wire is_lw   = is_mem && id_subclass == SCARV_COP_SCLASS_LD_W;
-wire is_lh   = is_mem && id_subclass == SCARV_COP_SCLASS_LH_CR;
-wire is_lb   = is_mem && id_subclass == SCARV_COP_SCLASS_LB_CR;
-wire is_sw   = is_mem && id_subclass == SCARV_COP_SCLASS_ST_W;
-wire is_sh   = is_mem && id_subclass == SCARV_COP_SCLASS_ST_H;
-wire is_sb   = is_mem && id_subclass == SCARV_COP_SCLASS_ST_B;
-wire is_ldr_w= is_mem && id_subclass == SCARV_COP_SCLASS_LDR_W;
-wire is_ldr_h= is_mem && id_subclass == SCARV_COP_SCLASS_LDR_H;
-wire is_ldr_b= is_mem && id_subclass == SCARV_COP_SCLASS_LDR_B;
-wire is_str_w= is_mem && id_subclass == SCARV_COP_SCLASS_STR_W;
-wire is_str_h= is_mem && id_subclass == SCARV_COP_SCLASS_STR_H;
-wire is_str_b= is_mem && id_subclass == SCARV_COP_SCLASS_STR_B;
+wire is_lw   = is_mem && id_subclass[SCARV_COP_SCLASS_LD_W];
+wire is_lh   = is_mem && id_subclass[SCARV_COP_SCLASS_LH_CR];
+wire is_lb   = is_mem && id_subclass[SCARV_COP_SCLASS_LB_CR];
+wire is_sw   = is_mem && id_subclass[SCARV_COP_SCLASS_ST_W];
+wire is_sh   = is_mem && id_subclass[SCARV_COP_SCLASS_ST_H];
+wire is_sb   = is_mem && id_subclass[SCARV_COP_SCLASS_ST_B];
+wire is_ldr_w= is_mem && id_subclass[SCARV_COP_SCLASS_LDR_W];
+wire is_ldr_h= is_mem && id_subclass[SCARV_COP_SCLASS_LDR_H];
+wire is_ldr_b= is_mem && id_subclass[SCARV_COP_SCLASS_LDR_B];
+wire is_str_w= is_mem && id_subclass[SCARV_COP_SCLASS_STR_W];
+wire is_str_h= is_mem && id_subclass[SCARV_COP_SCLASS_STR_H];
+wire is_str_b= is_mem && id_subclass[SCARV_COP_SCLASS_STR_B];
 
 // Is this an indexed load/store?
 wire ildst = is_ldr_w || is_ldr_h || is_ldr_b || 

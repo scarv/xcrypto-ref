@@ -29,8 +29,7 @@ input  wire [31:0]  malu_rs2         , // Source register 2
 input  wire [31:0]  malu_rs3         , // Source register 3
 
 input  wire [31:0]  id_imm           , // Source immedate
-input  wire [ 3:0]  id_class         , // Instruction class
-input  wire [ 4:0]  id_subclass      , // Instruction subclass
+input  wire [14:0]  id_subclass      , // Instruction subclass
 
 output wire [ 3:0]  malu_cpr_rd_ben  , // Writeback byte enable
 output wire [31:0]  malu_cpr_rd_wdata  // Writeback data
@@ -42,21 +41,21 @@ output wire [31:0]  malu_cpr_rd_wdata  // Writeback data
 // Individual instruction decoding.
 //
 
-wire is_mequ     = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MEQU ;
-wire is_mlte     = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MLTE ;
-wire is_mgte     = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MGTE ;
-wire is_madd_3   = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MADD_3;
-wire is_madd_2   = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MADD_2;
-wire is_msub_3   = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MSUB_3;
-wire is_msub_2   = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MSUB_2;
-wire is_msll_i   = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MSLL_I;
-wire is_msll     = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MSLL ;
-wire is_msrl_i   = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MSRL_I;
-wire is_msrl     = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MSRL ;
-wire is_macc_2   = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MACC_2;
-wire is_macc_1   = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MACC_1;
-wire is_mmul_3   = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MMUL_3 ;
-wire is_mclmul_3 = malu_ivalid && id_subclass == SCARV_COP_SCLASS_MCLMUL_3 ;
+wire is_mequ     = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MEQU ];
+wire is_mlte     = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MLTE ];
+wire is_mgte     = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MGTE ];
+wire is_madd_3   = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MADD_3];
+wire is_madd_2   = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MADD_2];
+wire is_msub_3   = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MSUB_3];
+wire is_msub_2   = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MSUB_2];
+wire is_msll_i   = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MSLL_I];
+wire is_msll     = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MSLL ];
+wire is_msrl_i   = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MSRL_I];
+wire is_msrl     = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MSRL ];
+wire is_macc_2   = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MACC_2];
+wire is_macc_1   = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MACC_1];
+wire is_mmul_3   = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MMUL_3 ];
+wire is_mclmul_3 = malu_ivalid && id_subclass[SCARV_COP_SCLASS_MCLMUL_3 ];
 
 //
 // MP instruction control FSM

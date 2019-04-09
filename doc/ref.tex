@@ -1,7 +1,7 @@
 \documentclass{scarv-report}
 
 \title{{\sc \XCID: a cryptographic ISE for RISC-V} \\ {\sc\large Reference Implementation Document}}
-\date{Version $0.13.4$ (\today)}
+\date{Version $0.14.0$ (\today)}
 \author{Ben Marshall}
 \author{Daniel Page}
 \author{Thinh Pham}
@@ -700,6 +700,50 @@ The instructions handled by the sha3block are:
 \item {\tt xc.sha3.x2}
 \item {\tt xc.sha3.x4}
 \item {\tt xc.sha3.yx}
+\end{itemize}
+
+All of these instructions take 1 cycle to execute.
+
+\subsection{Permutation Block ({\tt scarv\_cop\_permute})}
+
+This block is responsible for implementing all of the bit permutation
+instructions.
+It's interface is described in table \ref{tab:sigs-permute-block}.
+
+\SIGNALS{
+\SIGNALI{1}{perm\_ivalid}{
+    Indicates that the input instruction data is valid and that the 
+    block should execute the specified instruction.
+}
+\SIGNALO{1}{perm\_idone}{
+    Indicates that the block has finished executing an instruction
+    and is ready for another on the next cycle.
+}
+\SIGNALI{32}{perm\_rs1}{RISC-V GPR source register 1}
+\SIGNALI{32}{perm\_rs2}{
+    RISC-V GPR source register 3 / destination register contents
+}
+\SIGNALI{3}{id\_subclass}{
+    Identifies which instruction is being executed by the packed ALU block.
+}
+\SIGNALI{32}{id\_imm}{
+    Contains the shift amount for each of the SHA3 instructions.
+}
+\SIGNALO{4}{perm\_cpr\_rd\_ben}{
+    4-bit byte write enable signal for write-back data.
+}
+\SIGNALO{32}{perm\_cpr\_wdata}{
+    Data to be written to the $\GPR$ register file
+}
+}{Interface signals for the permute block. All signals are
+synchronous to \SIGREF{g\_clk}.}
+{tab:sigs-permute-block}
+
+The instructions handled by the sha3block are:
+\begin{itemize}
+\item {\tt xc.pbit}
+\item {\tt xc.ipbit}
+\item {\tt xc.pbyte}
 \end{itemize}
 
 All of these instructions take 1 cycle to execute.

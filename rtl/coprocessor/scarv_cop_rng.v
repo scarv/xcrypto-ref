@@ -30,7 +30,7 @@ output wire         cop_rand_sample  , // cop_random valid when this high.
 input  wire [31:0]  rng_rs1          , // Source register 1
 
 input  wire [31:0]  id_imm           , // Source immedate
-input  wire [14:0]  id_subclass      , // Instruction subclass
+input  wire [15:0]  id_subclass      , // Instruction subclass
 
 output wire [ 3:0]  rng_cpr_rd_ben   , // Writeback byte enable
 output wire [31:0]  rng_cpr_rd_wdata  // Writeback data

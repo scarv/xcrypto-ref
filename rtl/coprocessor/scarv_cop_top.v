@@ -81,7 +81,7 @@ parameter FAST_COP_CPU_IF = 0;
 wire          id_exception    ; // Illegal instruction exception.
 
 wire [ 8:0]   id_class        ; // Instruction class.
-wire [14:0]   id_subclass     ; // Instruction subclass.
+wire [15:0]   id_subclass     ; // Instruction subclass.
 
 wire          id_cprs_init    ; // xc.init instruction executing.
 wire          cprs_init_done  ; // xc.init instruction finished.

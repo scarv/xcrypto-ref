@@ -24,7 +24,7 @@ output wire         aes_idone       , // Instruction complete
 input  wire [31:0]  aes_rs1         , // Source register 1
 input  wire [31:0]  aes_rs2         , // Source register 2
 
-input  wire [14:0]  id_subclass     , // Instruction subclass
+input  wire [15:0]  id_subclass     , // Instruction subclass
 
 output wire [ 3:0]  aes_cpr_rd_ben  , // Writeback byte enable
 output wire [31:0]  aes_cpr_rd_wdata  // Writeback data

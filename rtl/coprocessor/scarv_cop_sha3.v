@@ -25,7 +25,7 @@ output wire         sha3_idone      , // Instruction complete
 input  wire [31:0]  sha3_rs1         , // Source register 1
 input  wire [31:0]  sha3_rs2         , // Source register 2
 
-input  wire [14:0]  id_subclass      , // Instruction subclass
+input  wire [15:0]  id_subclass      , // Instruction subclass
 input  wire [31:0]  id_imm           , // Immediate
 
 output wire [ 3:0]  sha3_cpr_rd_ben  , // Writeback byte enable

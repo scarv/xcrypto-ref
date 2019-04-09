@@ -21,7 +21,7 @@ input  wire [31:0] id_encoded      , // Encoding 32-bit instruction
 output wire        id_exception    , // Illegal instruction exception.
 
 output wire [ 8:0] id_class        , // Instruction class.
-output wire [14:0] id_subclass     , // Instruction subclass.
+output wire [15:0] id_subclass     , // Instruction subclass.
 output wire        id_cprs_init    , // An init instruction is executing.
 
 output wire [ 2:0] id_pw           , // Instruction pack width.
@@ -158,7 +158,7 @@ assign id_class[SCARV_COP_ICLASS_BITWISE     ] = class_bitwise      ;
 
 //
 // Subclass fields for different instruction classes.
-wire [14:0] subclass_load_store;
+wire [15:0] subclass_load_store;
 assign subclass_load_store[SCARV_COP_SCLASS_SCATTER_B] = dec_scatter_b;
 assign subclass_load_store[SCARV_COP_SCLASS_GATHER_B ] = dec_gather_b ;
 assign subclass_load_store[SCARV_COP_SCLASS_SCATTER_H] = dec_scatter_h;
@@ -176,7 +176,7 @@ assign subclass_load_store[SCARV_COP_SCLASS_STR_W    ] = dec_str_w   ;
 assign subclass_load_store[SCARV_COP_SCLASS_STR_H    ] = dec_str_h   ;
 assign subclass_load_store[SCARV_COP_SCLASS_STR_B    ] = dec_str_b   ;
 
-wire [14:0] subclass_mp;
+wire [15:0] subclass_mp;
 assign subclass_mp[SCARV_COP_SCLASS_MEQU    ] = dec_mequ ;
 assign subclass_mp[SCARV_COP_SCLASS_MLTE    ] = dec_mlte ;
 assign subclass_mp[SCARV_COP_SCLASS_MGTE    ] = dec_mgte ;
@@ -192,8 +192,9 @@ assign subclass_mp[SCARV_COP_SCLASS_MACC_2  ] = dec_macc_2;
 assign subclass_mp[SCARV_COP_SCLASS_MACC_1  ] = dec_macc_1;
 assign subclass_mp[SCARV_COP_SCLASS_MMUL_3  ] = dec_mmul_3 ;
 assign subclass_mp[SCARV_COP_SCLASS_MCLMUL_3] = dec_mclmul_3;
+assign subclass_mp[                    14   ] = 1'b0;
 
-wire [14:0] subclass_bitwise;
+wire [15:0] subclass_bitwise;
 assign subclass_bitwise[SCARV_COP_SCLASS_BOP   ] = dec_bop ;
 assign subclass_bitwise[SCARV_COP_SCLASS_BMV   ] = dec_bmv ;
 assign subclass_bitwise[SCARV_COP_SCLASS_INS   ] = dec_ins ;
@@ -201,28 +202,32 @@ assign subclass_bitwise[SCARV_COP_SCLASS_EXT   ] = dec_ext ;
 assign subclass_bitwise[SCARV_COP_SCLASS_LD_LIU] = dec_ld_liu ;
 assign subclass_bitwise[SCARV_COP_SCLASS_LD_HIU] = dec_ld_hiu ;
 assign subclass_bitwise[SCARV_COP_SCLASS_LUT   ] = dec_lut;
+assign subclass_bitwise[                  14:8 ] = 0;
 
-wire [14:0] subclass_permute;
+wire [15:0] subclass_permute;
 assign subclass_permute[SCARV_COP_SCLASS_PERM_BIT ] = dec_pbit ;
 assign subclass_permute[SCARV_COP_SCLASS_PERM_IBIT] = dec_ipbit;
 assign subclass_permute[SCARV_COP_SCLASS_PERM_BYTE] = dec_pbyte;
+assign subclass_permute[                     14:3 ] = 0;
 
-wire [14:0] subclass_aes;
+wire [15:0] subclass_aes;
 assign subclass_aes[SCARV_COP_SCLASS_AESSUB_ENC   ] = dec_aessub_enc   ;
 assign subclass_aes[SCARV_COP_SCLASS_AESSUB_ENCROT] = dec_aessub_encrot;
 assign subclass_aes[SCARV_COP_SCLASS_AESSUB_DEC   ] = dec_aessub_dec   ;
 assign subclass_aes[SCARV_COP_SCLASS_AESSUB_DECROT] = dec_aessub_decrot;
 assign subclass_aes[SCARV_COP_SCLASS_AESMIX_ENC   ] = dec_aesmix_enc   ;
 assign subclass_aes[SCARV_COP_SCLASS_AESMIX_DEC   ] = dec_aesmix_dec   ;
+assign subclass_aes[                         14:6 ] = 0;
 
-wire [14:0] subclass_sha3;
+wire [15:0] subclass_sha3;
 assign subclass_sha3[SCARV_COP_SCLASS_SHA3_XY] = dec_sha3_xy;
 assign subclass_sha3[SCARV_COP_SCLASS_SHA3_X1] = dec_sha3_x1;
 assign subclass_sha3[SCARV_COP_SCLASS_SHA3_X2] = dec_sha3_x2;
 assign subclass_sha3[SCARV_COP_SCLASS_SHA3_X4] = dec_sha3_x4;
 assign subclass_sha3[SCARV_COP_SCLASS_SHA3_YX] = dec_sha3_yx;
+assign subclass_sha3[                   14:5 ] = 0;
 
-wire [14:0] subclass_palu;
+wire [15:0] subclass_palu;
 assign subclass_palu[SCARV_COP_SCLASS_PADD    ] = dec_padd    ;
 assign subclass_palu[SCARV_COP_SCLASS_PSUB    ] = dec_psub    ;
 assign subclass_palu[SCARV_COP_SCLASS_PMUL_L  ] = dec_pmul_l  ;
@@ -235,17 +240,20 @@ assign subclass_palu[SCARV_COP_SCLASS_PROT    ] = dec_prot    ;
 assign subclass_palu[SCARV_COP_SCLASS_PSLL_I  ] = dec_psll_i  ;
 assign subclass_palu[SCARV_COP_SCLASS_PSRL_I  ] = dec_psrl_i  ;
 assign subclass_palu[SCARV_COP_SCLASS_PROT_I  ] = dec_prot_i  ;
+assign subclass_palu[                    14:12] = 0;
 
-wire [14:0] subclass_move;
+wire [15:0] subclass_move;
 assign subclass_move[SCARV_COP_SCLASS_CMOV_T ] = dec_cmov_t ;
 assign subclass_move[SCARV_COP_SCLASS_CMOV_F ] = dec_cmov_f ;
 assign subclass_move[SCARV_COP_SCLASS_GPR2XCR] = dec_gpr2xcr;
 assign subclass_move[SCARV_COP_SCLASS_XCR2GPR] = dec_xcr2gpr;
+assign subclass_move[                    14:4] = 0;
 
-wire [14:0] subclass_random;
+wire [15:0] subclass_random;
 assign subclass_random[SCARV_COP_SCLASS_RSEED] = dec_rngseed;
 assign subclass_random[SCARV_COP_SCLASS_RSAMP] = dec_rngsamp;
 assign subclass_random[SCARV_COP_SCLASS_RTEST] = dec_rngtest;
+assign subclass_random[                  14:3] = 0;
 
 //
 // Identify individual instructions within a class using the subclass

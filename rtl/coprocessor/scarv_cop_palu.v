@@ -33,7 +33,7 @@ input  wire [31:0]  palu_rs3         , // Source register 3
 input  wire [31:0]  id_imm           , // Source immedate
 input  wire [ 2:0]  id_pw            , // Pack width
 input  wire [ 8:0]  id_class         , // Instruction class
-input  wire [14:0]  id_subclass      , // Instruction subclass
+input  wire [15:0]  id_subclass      , // Instruction subclass
 
 output wire [ 3:0]  palu_cpr_rd_ben  , // Writeback byte enable
 output wire [31:0]  palu_cpr_rd_wdata  // Writeback data

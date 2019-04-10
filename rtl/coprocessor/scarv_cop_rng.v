@@ -30,8 +30,7 @@ output wire         cop_rand_sample  , // cop_random valid when this high.
 input  wire [31:0]  rng_rs1          , // Source register 1
 
 input  wire [31:0]  id_imm           , // Source immedate
-input  wire [ 3:0]  id_class         , // Instruction class
-input  wire [ 4:0]  id_subclass      , // Instruction subclass
+input  wire [15:0]  id_subclass      , // Instruction subclass
 
 output wire [ 3:0]  rng_cpr_rd_ben   , // Writeback byte enable
 output wire [31:0]  rng_cpr_rd_wdata  // Writeback data
@@ -59,17 +58,11 @@ assign cop_rand_sample  = is_rsamp;
 
 //
 // Which RNG instruction is this?
-wire is_rseed   = rng_ivalid                            && 
-                  id_class == SCARV_COP_ICLASS_RANDOM   &&
-                  id_subclass == SCARV_COP_SCLASS_RSEED ;
+wire is_rseed   = rng_ivalid && id_subclass[SCARV_COP_SCLASS_RSEED];
 
-wire is_rsamp   = rng_ivalid                            && 
-                  id_class == SCARV_COP_ICLASS_RANDOM   &&
-                  id_subclass == SCARV_COP_SCLASS_RSAMP ;
+wire is_rsamp   = rng_ivalid && id_subclass[SCARV_COP_SCLASS_RSAMP];
 
-wire is_rtest   = rng_ivalid                            && 
-                  id_class == SCARV_COP_ICLASS_RANDOM   &&
-                  id_subclass == SCARV_COP_SCLASS_RTEST ;
+wire is_rtest   = rng_ivalid && id_subclass[SCARV_COP_SCLASS_RTEST];
 
 //
 // Writeback handling

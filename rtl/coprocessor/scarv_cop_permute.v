@@ -25,7 +25,7 @@ input  wire [31:0]  perm_rs1         , // Source register 1
 input  wire [31:0]  perm_rs3         , // Source register 3 / rd
 
 input  wire [31:0]  id_imm           , // Source immedate
-input  wire [ 4:0]  id_subclass      , // Instruction subclass
+input  wire [15:0]  id_subclass      , // Instruction subclass
 
 output wire [ 3:0]  perm_cpr_rd_ben  , // Writeback byte enable
 output wire [31:0]  perm_cpr_rd_wdata  // Writeback data
@@ -38,9 +38,9 @@ output wire [31:0]  perm_cpr_rd_wdata  // Writeback data
 wire [31:0] p_fwd_out;
 wire [31:0] p_rev_out;
 
-wire is_pbit    = perm_ivalid && id_subclass == SCARV_COP_SCLASS_PERM_BIT;
-wire is_ipbit   = perm_ivalid && id_subclass == SCARV_COP_SCLASS_PERM_IBIT;
-wire is_pbyte   = perm_ivalid && id_subclass == SCARV_COP_SCLASS_PERM_BYTE;
+wire is_pbit    = perm_ivalid && id_subclass[SCARV_COP_SCLASS_PERM_BIT];
+wire is_ipbit   = perm_ivalid && id_subclass[SCARV_COP_SCLASS_PERM_IBIT];
+wire is_pbyte   = perm_ivalid && id_subclass[SCARV_COP_SCLASS_PERM_BYTE];
 
 assign perm_idone      = perm_ivalid;
 

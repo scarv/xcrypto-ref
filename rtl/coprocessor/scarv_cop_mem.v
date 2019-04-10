@@ -79,11 +79,11 @@ wire single_mem =
     is_lw    || is_lh    || is_lb    || is_sw    || is_sh    || is_sb    ||
     is_ldr_w || is_ldr_h || is_ldr_b || is_str_w || is_str_h || is_str_b ;
 
-wire is_ga_b = is_mem && id_subclass == SCARV_COP_SCLASS_GATHER_B;
-wire is_ga_h = is_mem && id_subclass == SCARV_COP_SCLASS_GATHER_H;
+wire is_ga_b = is_mem && id_subclass[SCARV_COP_SCLASS_GATHER_B];
+wire is_ga_h = is_mem && id_subclass[SCARV_COP_SCLASS_GATHER_H];
 
-wire is_sc_b = is_mem && id_subclass == SCARV_COP_SCLASS_SCATTER_B;
-wire is_sc_h = is_mem && id_subclass == SCARV_COP_SCLASS_SCATTER_H;
+wire is_sc_b = is_mem && id_subclass[SCARV_COP_SCLASS_SCATTER_B];
+wire is_sc_h = is_mem && id_subclass[SCARV_COP_SCLASS_SCATTER_H];
 
 wire word_op         = is_lw    || is_sw    || is_str_w     || is_ldr_w;
 wire halfword_op_nsg = is_lh    || is_sh    || is_ldr_h     ||is_str_h;

@@ -1,21 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.86 (w)1999-2017 BSI
-[*] Mon Apr  8 10:11:18 2019
+[*] Tue Apr  9 15:38:58 2019
 [*]
-[dumpfile] "/home/ben/scarv/repos/xcrypto/xcrypto-ref/build/smt2/instr_pbit.vcd"
-[dumpfile_mtime] "Mon Apr  8 10:08:27 2019"
-[dumpfile_size] 211527
+[dumpfile] "/home/ben/scarv/repos/xcrypto/xcrypto-ref/build/smt2/instr_ld_w.vcd"
+[dumpfile_mtime] "Tue Apr  9 14:52:10 2019"
+[dumpfile_size] 222724
 [savefile] "/home/ben/scarv/repos/xcrypto/xcrypto-ref/flow/gtkwave/formal-flow-view.gtkw"
 [timestart] 0
-[size] 1046 1025
+[size] 1920 1025
 [pos] -1 -1
-*-4.870690 44 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-3.963569 40 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_formal.
 [treeopen] tb_formal.i_dut.
 [treeopen] tb_formal.i_dut.i_scarv_cop_palu.
 [treeopen] tb_formal.i_fml_top.
 [sst_width] 240
-[signals_width] 295
+[signals_width] 430
 [sst_expanded] 1
 [sst_vpaned_height] 301
 @28
@@ -30,7 +30,7 @@ tb_formal.i_dut.cop_insn_ack
 @22
 tb_formal.i_dut.cpu_insn_enc[31:0]
 tb_formal.i_dut.cpu_rs1[31:0]
-@c00200
+@800200
 -MEMORY BUS
 @22
 tb_formal.i_dut.cop_mem_addr[31:0]
@@ -46,46 +46,146 @@ tb_formal.i_dut.cop_mem_stall
 tb_formal.i_dut.cop_mem_wdata[31:0]
 @28
 tb_formal.i_dut.cop_mem_wen
-@1401200
+@1000200
 -MEMORY BUS
-@28
-tb_formal.i_dut.i_scarv_cop_permute.is_pbit
+@800200
+-CPRS
 @22
-tb_formal.i_dut.crs1_rdata[31:0]
-tb_formal.i_dut.crs2_rdata[31:0]
-tb_formal.i_dut.crs3_rdata[31:0]
-tb_formal.i_dut.i_scarv_cop_permute.perm_cpr_rd_ben[3:0]
-@23
-tb_formal.i_dut.i_scarv_cop_permute.perm_cpr_rd_wdata[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<0>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<1>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<2>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<3>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<4>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<5>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<6>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<7>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<8>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<9>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<10>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<11>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<12>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<13>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<14>[31:0]
+tb_formal.i_dut.i_scarv_cop_cprs.cprs<15>[31:0]
+@1000200
+-CPRS
+@28
+tb_formal.i_dut.i_scarv_cop_idecode.id_class[8:0]
+tb_formal.i_dut.id_subclass[15:0]
+@29
+tb_formal.i_dut.i_scarv_cop_idecode.subclass_bitwise[15:0]
+tb_formal.i_dut.i_scarv_cop_idecode.subclass_load_store[15:0]
+tb_formal.i_dut.i_scarv_cop_idecode.subclass_sha3[15:0]
+@28
+tb_formal.i_dut.i_scarv_cop_idecode.subclass_aes[15:0]
+tb_formal.i_dut.i_scarv_cop_idecode.subclass_move[15:0]
+tb_formal.i_dut.i_scarv_cop_idecode.subclass_mp[15:0]
+tb_formal.i_dut.i_scarv_cop_idecode.subclass_palu[15:0]
+tb_formal.i_dut.i_scarv_cop_idecode.subclass_permute[15:0]
+tb_formal.i_dut.i_scarv_cop_idecode.subclass_random[15:0]
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ld_w
+tb_formal.i_dut.i_scarv_cop_idecode.dec_str_b
+tb_formal.i_dut.i_scarv_cop_mem.is_mem
+tb_formal.i_dut.i_scarv_cop_mem.is_ga_b
+tb_formal.i_dut.i_scarv_cop_mem.is_ga_h
+tb_formal.i_dut.i_scarv_cop_mem.is_lb
+tb_formal.i_dut.i_scarv_cop_mem.is_ldr_b
+tb_formal.i_dut.i_scarv_cop_mem.is_ldr_h
+tb_formal.i_dut.i_scarv_cop_mem.is_ldr_w
+tb_formal.i_dut.i_scarv_cop_mem.is_lh
+tb_formal.i_dut.i_scarv_cop_mem.is_lw
+tb_formal.i_dut.i_scarv_cop_mem.is_sb
+tb_formal.i_dut.i_scarv_cop_mem.is_sc_b
+tb_formal.i_dut.i_scarv_cop_mem.is_sc_h
+tb_formal.i_dut.i_scarv_cop_mem.is_sh
+tb_formal.i_dut.i_scarv_cop_mem.is_str_b
+tb_formal.i_dut.i_scarv_cop_mem.is_str_h
+tb_formal.i_dut.i_scarv_cop_mem.is_str_w
+tb_formal.i_dut.i_scarv_cop_mem.is_sw
+tb_formal.i_dut.i_scarv_cop_mem.mem_is_load
+tb_formal.i_dut.i_scarv_cop_mem.mem_is_store
 @200
 -
 @28
 tb_formal.i_fml_top.i_fml_checks.dec_pbit
-@22
-tb_formal.i_dut.i_scarv_cop_permute.p_input[31:0]
-tb_formal.i_dut.i_scarv_cop_permute.p_mask[31:0]
-@200
--
-@22
-tb_formal.i_dut.i_scarv_cop_permute.fwd<0>[31:0]
-tb_formal.i_dut.i_scarv_cop_permute.fwd<1>[31:0]
-tb_formal.i_dut.i_scarv_cop_permute.fwd<2>[31:0]
-tb_formal.i_dut.i_scarv_cop_permute.fwd<3>[31:0]
-tb_formal.i_dut.i_scarv_cop_permute.fwd<4>[31:0]
-@200
--
-@28
-tb_formal.i_fml_top.i_fml_checks.dec_pbit
-@22
-tb_formal.i_fml_top.i_fml_checks.perm_in[31:0]
-tb_formal.i_fml_top.i_fml_checks.perm_msk[31:0]
-@28
 tb_formal.i_fml_top.i_fml_checks.vtx_valid
 @22
 tb_formal.i_fml_top.i_fml_checks.encoded[31:0]
 @200
 -
 @28
+tb_formal.i_dut.i_scarv_cop_idecode.dec_aesmix_dec
+tb_formal.i_dut.i_scarv_cop_idecode.dec_aesmix_enc
+tb_formal.i_dut.i_scarv_cop_idecode.dec_aessub_dec
+tb_formal.i_dut.i_scarv_cop_idecode.dec_aessub_decrot
+tb_formal.i_dut.i_scarv_cop_idecode.dec_aessub_enc
+tb_formal.i_dut.i_scarv_cop_idecode.dec_aessub_encrot
+tb_formal.i_dut.i_scarv_cop_idecode.dec_bmv
+tb_formal.i_dut.i_scarv_cop_idecode.dec_bop
+tb_formal.i_dut.i_scarv_cop_idecode.dec_cmov_f
+tb_formal.i_dut.i_scarv_cop_idecode.dec_cmov_t
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ext
+tb_formal.i_dut.i_scarv_cop_idecode.dec_gather_b
+tb_formal.i_dut.i_scarv_cop_idecode.dec_gather_h
+tb_formal.i_dut.i_scarv_cop_idecode.dec_gpr2xcr
+tb_formal.i_dut.i_scarv_cop_idecode.dec_init
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ins
+tb_formal.i_dut.i_scarv_cop_idecode.dec_invalid_opcode
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ipbit
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ld_bu
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ld_hiu
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ld_hu
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ld_liu
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ld_w
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ldr_bu
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ldr_hu
+tb_formal.i_dut.i_scarv_cop_idecode.dec_ldr_w
+tb_formal.i_dut.i_scarv_cop_idecode.dec_lut
+tb_formal.i_dut.i_scarv_cop_idecode.dec_macc_1
+tb_formal.i_dut.i_scarv_cop_idecode.dec_macc_2
+tb_formal.i_dut.i_scarv_cop_idecode.dec_madd_2
+tb_formal.i_dut.i_scarv_cop_idecode.dec_madd_3
+tb_formal.i_dut.i_scarv_cop_idecode.dec_mequ
+tb_formal.i_dut.i_scarv_cop_idecode.dec_mgte
+tb_formal.i_dut.i_scarv_cop_idecode.dec_mlte
+tb_formal.i_dut.i_scarv_cop_idecode.dec_mmul_3
+tb_formal.i_dut.i_scarv_cop_idecode.dec_msll
+tb_formal.i_dut.i_scarv_cop_idecode.dec_msll_i
+tb_formal.i_dut.i_scarv_cop_idecode.dec_msrl
+tb_formal.i_dut.i_scarv_cop_idecode.dec_msrl_i
+tb_formal.i_dut.i_scarv_cop_idecode.dec_msub_2
+tb_formal.i_dut.i_scarv_cop_idecode.dec_msub_3
+tb_formal.i_dut.i_scarv_cop_idecode.dec_padd
+tb_formal.i_dut.i_scarv_cop_idecode.dec_pbit
+tb_formal.i_dut.i_scarv_cop_idecode.dec_pbyte
+tb_formal.i_dut.i_scarv_cop_idecode.dec_pclmul_h
+tb_formal.i_dut.i_scarv_cop_idecode.dec_pclmul_l
+tb_formal.i_dut.i_scarv_cop_idecode.dec_pmul_h
+tb_formal.i_dut.i_scarv_cop_idecode.dec_pmul_l
+tb_formal.i_dut.i_scarv_cop_idecode.dec_prot
+tb_formal.i_dut.i_scarv_cop_idecode.dec_prot_i
+tb_formal.i_dut.i_scarv_cop_idecode.dec_psll
+tb_formal.i_dut.i_scarv_cop_idecode.dec_psll_i
+tb_formal.i_dut.i_scarv_cop_idecode.dec_psrl
+tb_formal.i_dut.i_scarv_cop_idecode.dec_psrl_i
+tb_formal.i_dut.i_scarv_cop_idecode.dec_psub
+tb_formal.i_dut.i_scarv_cop_idecode.dec_rngsamp
+tb_formal.i_dut.i_scarv_cop_idecode.dec_rngseed
+tb_formal.i_dut.i_scarv_cop_idecode.dec_rngtest
+tb_formal.i_dut.i_scarv_cop_idecode.dec_scatter_b
+tb_formal.i_dut.i_scarv_cop_idecode.dec_scatter_h
+tb_formal.i_dut.i_scarv_cop_idecode.dec_sha3_x1
+tb_formal.i_dut.i_scarv_cop_idecode.dec_sha3_x2
+tb_formal.i_dut.i_scarv_cop_idecode.dec_sha3_x4
+tb_formal.i_dut.i_scarv_cop_idecode.dec_sha3_xy
+tb_formal.i_dut.i_scarv_cop_idecode.dec_sha3_yx
+tb_formal.i_dut.i_scarv_cop_idecode.dec_st_b
+tb_formal.i_dut.i_scarv_cop_idecode.dec_st_h
+tb_formal.i_dut.i_scarv_cop_idecode.dec_st_w
+tb_formal.i_dut.i_scarv_cop_idecode.dec_str_b
+tb_formal.i_dut.i_scarv_cop_idecode.dec_str_h
+tb_formal.i_dut.i_scarv_cop_idecode.dec_str_w
+tb_formal.i_dut.i_scarv_cop_idecode.dec_xcr2gpr
 tb_formal.i_dut.cop_insn_rsp
 tb_formal.i_dut.cpu_insn_ack
 tb_formal.i_dut.cop_result[2:0]

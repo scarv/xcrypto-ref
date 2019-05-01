@@ -14,7 +14,7 @@ SRC_FORMAL  ?= $(REPO_HOME)/verif/tb/tb_formal.v \
                $(REPO_HOME)/verif/formal/fml_common.vh \
                $(REPO_HOME)/verif/formal/fml_top.v
 
-VLOG_out    = $(XC_WORK)/scarv_cop_top.v
+VLOG_out    = $(XC_WORK)/synth.v
 
 LOG_SYNTH   = $(XC_WORK)/yosys-synth.log
 LOG_SMT2    = $(XC_WORK)/smt2/synthesis.log
@@ -43,8 +43,18 @@ all: $(VLOG_out) formal-checks
 
 formal-checks: $(SMT2_out)  $(SMT2_COVER) $(SMT2_RPTS)
 
-synthesise: $(VLOG_out)
-$(VLOG_out) : YS_SCRIPT = write-verilog.tcl
+synthesise-xcrypto: YS_SCRIPT = synth-xcrypto.tcl
+synthesise-xcrypto: $(VLOG_out)
+	cp $(VLOG_out) $(XC_WORK)/synth-xcrypto.v
+	cp $(LOG_SYNTH) $(XC_WORK)/synth-xcrypto.rpt
+	cp $(XC_WORK)/synth-statistics.rpt $(XC_WORK)/synth-xcrypto-stats.rpt
+
+synthesise-subsystem: YS_SCRIPT = synth-subsystem.tcl
+synthesise-subsystem: $(VLOG_out)
+	cp $(VLOG_out) $(XC_WORK)/synth-subsys.v
+	cp $(LOG_SYNTH) $(XC_WORK)/synth-subsys.rpt
+	cp $(XC_WORK)/synth-statistics.rpt $(XC_WORK)/synth-subsys-stats.rpt
+
 $(VLOG_out) : $(YS_SCRIPT) $(SRC_RTL)
 	$(YS) -QT -l $(LOG_SYNTH) $(YS_SCRIPT)
 

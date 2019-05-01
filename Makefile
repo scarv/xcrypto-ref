@@ -84,11 +84,18 @@ yosys_formal: $(RTL_DECODER)
 	$(MAKE) -C $(REPO_HOME)/flow/yosys formal-checks
 
 #
-# Synthesis the verilog design using yosys
+# Synthesis the PicoRV+XCrypto design using yosys
 #
-.PHONY: yosys_synth
-yosys_synth: $(RTL_DECODER)
-	$(MAKE) -C $(REPO_HOME)/flow/yosys synthesise
+.PHONY: yosys_synth_subsystem
+yosys_synth_subsystem: $(RTL_DECODER)
+	$(MAKE) -C $(REPO_HOME)/flow/yosys synthesise-subsystem
+
+#
+# Synthesis the XCrypto verilog design using yosys
+#
+.PHONY: yosys_synth_xcrypto
+yosys_synth_xcrypto: $(RTL_DECODER)
+	$(MAKE) -C $(REPO_HOME)/flow/yosys synthesise-xcrypto
 
 #
 # Build the Icarus Verilog based simulation model

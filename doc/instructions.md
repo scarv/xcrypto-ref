@@ -16,81 +16,82 @@ xcrd1           | XCR destination register 1
 xcrd2           | XCR destination register 2
 imm             | Immediate data
 memrdata        | Memory read data
-                | 
+memwdata        | Memory write data
+memaddr         | Memory address
 
 
-Instruction     | XCR WDATA 1 | XCR ADDR 1 | XCR WDATA 2 | XCR ADDR 2 | GPR WDATA 1 | GPR ADDR 1 | MEM ADDR    | MEM WDATA   |
-----------------|-------------|------------|-------------|------------|-------------|------------|-------------|-------------|
-`xc.xcr2gpr`    |             |            |             |            |  xcrs1      | gprd       |             |             |
-`xc.gpr2xcr`    | gprs1       | xcrd1      |             |            |             |            |             |             |
-`xc.init`       |             |            |             |            |             |            |             |             |
-`xc.cmov.t`     | xcrs1       | xcrd1      |             |            |             |            |             |             |
-`xc.cmov.f`     | xcrs1       | xcrd1      |             |            |             |            |             |             |
-`xc.ldr.bu`     | memrdata    | xcrd1      |             |            |             |            | gprs1+gprs2 |             |
-`xc.ldr.hu`     | memrdata    | xcrd1      |             |            |             |            | gprs1+gprs2 |             |
-`xc.ldr.w`      | memrdata    | xcrd1      |             |            |             |            | gprs1+gprs2 |             |
-`xc.ld.bu`      | memrdata    | xcrd1      |             |            |             |            | gprs1+imm   |             |
-`xc.ld.hu`      | memrdata    | xcrd1      |             |            |             |            | gprs1+imm   |             |
-`xc.ld.w`       | memrdata    | xcrd1      |             |            |             |            | gprs1+imm   |             |
-`xc.ld.hiu`     | imm         |            |             |            |             |            |             |             |
-`xc.ld.liu`     | imm         |            |             |            |             |            |             |             |
-`xc.str.b`      |             |            |             |            |             |            | gprs1+gprs2 | xcrs1       |
-`xc.str.h`      |             |            |             |            |             |            | gprs1+gprs2 | xcrs1       |
-`xc.str.w`      |             |            |             |            |             |            | gprs1+gprs2 | xcrs1       |
-`xc.st.b`       |             |            |             |            |             |            | gprs1+imm   | xcrs1       |
-`xc.st.h`       |             |            |             |            |             |            | gprs1+imm   | xcrs1       |
-`xc.st.w`       |             |            |             |            |             |            | gprs1+imm   | xcrs1       |
-`xc.scatter.b`  |             |            |             |            |             |            | gprs1+xcrs2 | xcrd        |
-`xc.scatter.h`  |             |            |             |            |             |            | gprs1+xcrs2 | xcrd        |
-`xc.gather.b`   | gadata      | xcrd1      |             |            |             |            |             |             |
-`xc.gather.h`   | gadata      | xcrd1      |             |            |             |            |             |             |
-`xc.rngseed`    |             |            |             |            |             |            |             |             |
-`xc.rngsamp`    | rngd        | xcrd1      |             |            |             |            |             |             |
-`xc.rngtest`    | rngs        | xcrd1      |             |            |             |            |             |             |
-`xc.padd`       | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.psub`       | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.pmul.l`     | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.pmul.h`     | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.pclmul.l`   | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.pclmul.h`   | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.psll`       | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.psrl`       | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.prot`       | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.psll.i`     | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.psrl.i`     | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.prot.i`     | xcrs1.xcrs2 | xcrd1      |             |            |             |            |             |             |
-`xc.sha3.xy`    |             |            |             |            | sha3        | gprd       |             |             |
-`xc.sha3.x1`    |             |            |             |            | sha3        | gprd       |             |             |
-`xc.sha3.x2`    |             |            |             |            | sha3        | gprd       |             |             |
-`xc.sha3.x4`    |             |            |             |            | sha3        | gprd       |             |             |
-`xc.sha3.yx`    |             |            |             |            | sha3        | gprd       |             |             |
-`xc.aessub.enc` | aes         | xcrd1      |             |            |             |            |             |             |
-`xc.aessub.enc` | aes         | xcrd1      |             |            |             |            |             |             |
-`xc.aessub.dec` | aes         | xcrd1      |             |            |             |            |             |             |
-`xc.aessub.dec` | aes         | xcrd1      |             |            |             |            |             |             |
-`xc.aesmix.enc` | aes         | xcrd1      |             |            |             |            |             |             |
-`xc.aesmix.dec` | aes         | xcrd1      |             |            |             |            |             |             |
-`xc.lut`        | lut         | xcrd1      |             |            |             |            |             |             |
-`xc.bop`        | bop         | xcrd1      |             |            |             |            |             |             |
-`xc.mequ`       |             |            |             |            | cmpres      | gprd       |             |             |
-`xc.mlte`       |             |            |             |            | cmpre       | gprd       |             |             |
-`xc.mgte`       |             |            |             |            | cmpre       | gprd       |             |             |
-`xc.madd.3`     | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.msub.3`     | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.madd.2`     | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.msub.2`     | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.macc.2`     | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.macc.1`     | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.msll`       | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.msrl`       | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.mmul.3`     | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.mclmul.3`   | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.msll.i`     | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.msrl.i`     | malulo      | xcrd1      | maluhi      | xcrd2      |             |            |             |             |
-`xc.ipbit`      | op          | xcrd1      |             |            |             |            |             |             |
-`xc.pbit`       | op          | xcrd1      |             |            |             |            |             |             |
-`xc.pbyte`      | op          | xcrd1      |             |            |             |            |             |             |
-`xc.ins`        | op          | xcrd1      |             |            |             |            |             |             |
-`xc.bmv`        | op          | xcrd1      |             |            |             |            |             |             |
-`xc.ext`        | op          | xcrd1      |             |            |             |            |             |             |
+Instruction     | Step 0                            | Step 1                            | Step 2                            | Step 3                           |
+----------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|
+`xc.xcr2gpr`    | xcrd1 <- gprs1                    |                                   |                                   |                                   |
+`xc.gpr2xcr`    | gprd  <- xcrs1                    |                                   |                                   |                                   |
+`xc.init`       | xcr[i] <- 0                       |                                   |                                   |                                   |
+`xc.cmov.t`     | xcrd1 <- |xcrs2 ? xcrs1 : xcrs2   |                                   |                                   |                                   |
+`xc.cmov.f`     | xcrd1 <- |xcrs2 ? xcrs2 : xcrs1   |                                   |                                   |                                   |
+`xc.ldr.bu`     | memaddr <- gprs1 + gprs2          |                                   |                                   |                                   |
+`xc.ldr.hu`     | memaddr <- gprs1 + gprs2          |                                   |                                   |                                   |
+`xc.ldr.w`      | memaddr <- gprs1 + gprs2          |                                   |                                   |                                   |
+`xc.ld.bu`      | memaddr <- gprs1 + imm            |                                   |                                   |                                   |
+`xc.ld.hu`      | memaddr <- gprs1 + imm            |                                   |                                   |                                   |
+`xc.ld.w`       | memaddr <- gprs1 + imm            |                                   |                                   |                                   |
+`xc.ld.hiu`     | xcrd1 <- {imm[15:0],xcrd1[15:0]}  |                                   |                                   |                                   |
+`xc.ld.liu`     | xcrd1 <- {xcrd1[31:16],imm[15:0]} |                                   |                                   |                                   |
+`xc.str.b`      | memaddr <- gprs1 + gprs2          |                                   |                                   |                                   |
+`xc.str.h`      | memaddr <- gprs1 + gprs2          |                                   |                                   |                                   |
+`xc.str.w`      | memaddr <- gprs1 + gprs2          |                                   |                                   |                                   |
+`xc.st.b`       | memaddr <- gprs1 + imm            |                                   |                                   |                                   |
+`xc.st.h`       | memaddr <- gprs1 + imm            |                                   |                                   |                                   |
+`xc.st.w`       | memaddr <- gprs1 + imm            |                                   |                                   |                                   |
+`xc.rngseed`    | rng <- xcrs1                      |                                   |                                   |                                   |
+`xc.rngsamp`    | xcrd1 <- rng                      |                                   |                                   |                                   |
+`xc.rngtest`    | xcrd1 <- rng?                     |                                   |                                   |                                   |
+`xc.scatter.b`  | memaddr <- gprs1 + xcrs2[7:0]     | memaddr <- gprs1 + xcrs2[15:8]    | memaddr <- gprs1 + xcrs2[23:16]   | memaddr <- gprs1 + xcrs2[31:24]   |
+`xc.scatter.h`  | memaddr <- gprs1 + xcrs2[15:0]    | memaddr <- gprs1 + xcrs2[31:16]   |                                   |                                   |
+`xc.gather.b`   | memaddr <- gprs1 + xcrs2[7:0]     | memaddr <- gprs1 + xcrs2[15:8]    | memaddr <- gprs1 + xcrs2[23:16]   | memaddr <- gprs1 + xcrs2[31:24]   |
+`xc.gather.h`   | memaddr <- gprs1 + xcrs2[15:0]    | memaddr <- gprs1 + xcrs2[31:16]   |                                   |                                   |
+`xc.padd`       | xcrd1 <- xcrs1 .. xcrs2           |                                   |                                   |                                   |
+`xc.psub`       | xcrd1 <- xcrs1 .. xcrs2           |                                   |                                   |                                   |
+`xc.pmul.l`     | xcrd1 <- xcrs1 .. xcrs2           |                                   |                                   |                                   |
+`xc.pmul.h`     | xcrd1 <- xcrs1 .. xcrs2           |                                   |                                   |                                   |
+`xc.pclmul.l`   | xcrd1 <- xcrs1 .. xcrs2           |                                   |                                   |                                   |
+`xc.pclmul.h`   | xcrd1 <- xcrs1 .. xcrs2           |                                   |                                   |                                   |
+`xc.psll`       | xcrd1 <- xcrs1 .. xcrs2           |                                   |                                   |                                   |
+`xc.psrl`       | xcrd1 <- xcrs1 .. xcrs2           |                                   |                                   |                                   |
+`xc.prot`       | xcrd1 <- xcrs1 .. xcrs2           |                                   |                                   |                                   |
+`xc.psll.i`     | xcrd1 <- xcrs1 .. imm             |                                   |                                   |                                   |
+`xc.psrl.i`     | xcrd1 <- xcrs1 .. imm             |                                   |                                   |                                   |
+`xc.prot.i`     | xcrd1 <- xcrs1 .. imm             |                                   |                                   |                                   |
+`xc.sha3.xy`    | gprd  <- f(gprs1, gprs2)          |                                   |                                   |                                   |
+`xc.sha3.x1`    | gprd  <- f(gprs1, gprs2)          |                                   |                                   |                                   |
+`xc.sha3.x2`    | gprd  <- f(gprs1, gprs2)          |                                   |                                   |                                   |
+`xc.sha3.x4`    | gprd  <- f(gprs1, gprs2)          |                                   |                                   |                                   |
+`xc.sha3.yx`    | gprd  <- f(gprs1, gprs2)          |                                   |                                   |                                   |
+`xc.aessub.enc` | xcrd1 <- f(xcrs1, xcrs2)          |                                   |                                   |                                   |
+`xc.aessub.enc` | xcrd1 <- f(xcrs1, xcrs2)          |                                   |                                   |                                   |
+`xc.aessub.dec` | xcrd1 <- f(xcrs1, xcrs2)          |                                   |                                   |                                   |
+`xc.aessub.dec` | xcrd1 <- f(xcrs1, xcrs2)          |                                   |                                   |                                   |
+`xc.aesmix.enc` | xcrd1 <- f(xcrs1, xcrs2)          |                                   |                                   |                                   |
+`xc.aesmix.dec` | xcrd1 <- f(xcrs1, xcrs2)          |                                   |                                   |                                   |
+`xc.lut`        | xcrd1 <- f(xcrd1, xcrs1, xcrs2)   |                                   |                                   |                                   |
+`xc.bop`        | xcrd1 <- f(xcrd1,xcrs1,xcrs2,imm) |                                   |                                   |                                   |
+`xc.mequ`       | gprd1 <- xcrs1 == xcrs2           |                                   |                                   |                                   |
+`xc.mlte`       | gprd1 <- xcrs1 <= xcrs2           |                                   |                                   |                                   |
+`xc.mgte`       | gprd1 <- xcrs1 >= xcrs2           |                                   |                                   |                                   |
+`xc.madd.3`     | tmp <- xcrs1 + xcrs2              |  xcrd1,xcrd2 <- tmp + xcrs3       |                                   |                                   |
+`xc.msub.3`     | tmp <- xcrs1 - xcrs2              |  xcrd1,xcrd2 <- tmp - xcrs3       |                                   |                                   |
+`xc.madd.2`     | xcrd1,xcrd2 <- xcrs1 + xcrs2      |                                   |                                   |                                   |
+`xc.msub.2`     | xcrd1,xcrd2 <- xcrs1 - xcrs2      |                                   |                                   |                                   |
+`xc.macc.2`     | tmp <- xcrd1,xcrd2 + xcrs1        |  xcrd1,xcrd2 <- tmp + xcrs2       |                                   |                                   |
+`xc.macc.1`     | xcrd1,xcrd2 <- xcrd1,xcrd2 +xcrs1 |                                   |                                   |                                   |
+`xc.msll`       | xcrd1,xcrd2 <- xcrs1,xcrs2<< xcrs3|                                   |                                   |                                   |
+`xc.msrl`       | xcrd1,xcrd2 <- xcrs1,xcrs2>> xcrs3|                                   |                                   |                                   |
+`xc.mmul.3`     | tmp         <- xcrs1 * xcrs2      |  xcrd1,xcrd2 <- tmp + xcrs3       |                                   |                                   |
+`xc.clmmul.3`   | tmp         <- xcrs1 . xcrs2      |  xcrd1,xcrd2 <- tmp . xcrs3       |                                   |                                   |
+`xc.msll.i`     | xcrd1,xcrd2 <- xcrs1,xcrs2 << imm |                                   |                                   |                                   |
+`xc.msrl.i`     | xcrd1,xcrd2 <- xcrs1,xcrs2 >> imm |                                   |                                   |                                   |
+`xc.ipbit`      | xcrd1 <- f(xcrs1, xcrs2)          |                                   |                                   |                                   |
+`xc.pbit`       | xcrd1 <- f(xcrs1, xcrs2)          |                                   |                                   |                                   |
+`xc.pbyte`      | xcrd1 <- f(xcrs1, imm  )          |                                   |                                   |                                   |
+`xc.bmv`        | xcrd1 <- f(xcrs1, xcrd1, imm)     |                                   |                                   |                                   |
+`xc.ins`        | xcrd1 <- f(xcrs1, xcrd1, imm)     |                                   |                                   |                                   |
+`xc.ext`        | xcrd1 <- f(xcrs1, imm)            |                                   |                                   |                                   |
 

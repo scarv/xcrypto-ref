@@ -109,8 +109,8 @@ localparam SCARV_COP_SCLASS_AESMIX_DEC    = 4'd5;
 
 localparam SCARV_COP_RNG_TYPE_LFSR32= 0;
 
-localparam SCARV_COP_PW_1           = 3'b000;
-localparam SCARV_COP_PW_2           = 3'b001;
-localparam SCARV_COP_PW_4           = 3'b010;
-localparam SCARV_COP_PW_8           = 3'b011;
-localparam SCARV_COP_PW_16          = 3'b101;
+localparam SCARV_COP_PW_1           = 3'b101;
+localparam SCARV_COP_PW_2           = 3'b100;
+localparam SCARV_COP_PW_4           = 3'b011;
+localparam SCARV_COP_PW_8           = 3'b010;
+localparam SCARV_COP_PW_16          = 3'b001;

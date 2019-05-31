@@ -81,19 +81,14 @@ assign id_rs1  = dec_arg_rs1;
 assign id_crd1 = {dec_arg_crdm, 1'b0};
 assign id_crd2 = {dec_arg_crdm, 1'b1};
 assign id_rd   = dec_arg_rd;
-assign id_pw   = {dec_arg_ca, dec_arg_cb, dec_arg_cc};
+assign id_pw   = dec_arg_pw;
 
 // Badly specified indexed load/store sub-word operation
 // where source/dest halfword or byte is invalid.
 wire bad_index_ldst = 
     (dec_arg_b0 == 2'd1 || dec_arg_b0 == 2'd3) && (dec_ldr_hu || dec_str_h);
 
-wire shift_imm_pack_width =
-        id_pw == 3'b100 &&
-        (dec_psll_i || dec_psrl_i || dec_prot_i);
-
 wire bad_pack_width = 
-    !shift_imm_pack_width            &&
     id_pw != SCARV_COP_PW_1          &&
     id_pw != SCARV_COP_PW_2          &&
     id_pw != SCARV_COP_PW_4          &&
@@ -283,17 +278,13 @@ wire imm_10     = dec_ext      || dec_ins     || dec_bmv || dec_pbit ||
 wire imm_sh_px  = dec_psll_i   || dec_psrl_i  || dec_prot_i;
 wire imm_sh_mp  = dec_msll_i   || dec_msrl_i;
 
-wire [4:0] shamt_imm =
-    {dec_arg_cb, dec_arg_cc} == 2'b00 ? {dec_arg_ca, dec_arg_cshamt} :
-                                        {1'b0      , dec_arg_cshamt} ;
-
 assign id_imm = 
     {32{imm_ld      }} & {{21{encoded[31]}}, encoded[31:21]               } |
     {32{imm_st      }} & {{21{encoded[31]}}, encoded[31:25],encoded[10:7] } |
     {32{imm_li      }} & {16'b0, encoded[31:21],encoded[19:15]            } |
     {32{imm_8       }} & {24'b0, encoded[31:24]                           } |
     {32{imm_10      }} & {22'b0, encoded[31:22]                           } |
-    {32{imm_sh_px   }} & {27'b0, shamt_imm                                } |
+    {32{imm_sh_px   }} & {27'b0, dec_arg_cshamt                           } |
     {32{imm_sh_mp   }} & {26'b0, dec_arg_cmshamt                          } ;
 
 wire indexed_ldst = dec_ldr_w  || dec_ldr_hu || dec_ldr_bu || 

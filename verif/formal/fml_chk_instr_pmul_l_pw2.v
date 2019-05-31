@@ -31,6 +31,8 @@ always @(posedge `VTX_CLK_NAME) if(vtx_valid) restrict(dec_pmul_l);
 // pmul_l
 //
 `VTX_CHECK_INSTR_BEGIN(pmul_l) 
+    
+    restrict(`CRS1 == 32'hFabc0123);
 
     // Correct pack width encoding value or instruction gives in bad
     // opcode result.

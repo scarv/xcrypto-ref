@@ -33,6 +33,7 @@ always @(posedge `VTX_CLK_NAME) if(vtx_valid) restrict(dec_pmul_h);
 `VTX_CHECK_INSTR_BEGIN(pmul_h) 
 
     restrict(pw != SCARV_COP_PW_1 && pw != SCARV_COP_PW_2);
+    restrict(`CRS1 == 32'hFabc0123);
 
     // Correct pack width encoding value or instruction gives in bad
     // opcode result.

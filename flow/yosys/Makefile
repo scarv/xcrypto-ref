@@ -3,7 +3,7 @@ YS          ?= $(YOSYS_ROOT)/yosys
 YSMTBMC     ?= $(YOSYS_ROOT)/yosys-smtbmc
 YS_SCRIPT   ?= write-smt-tb.tcl
 
-BMC_STEPS   ?= 10
+BMC_STEPS   ?= 8
 
 SRC_RTL     ?= $(shell find ../../ -path "*rtl/*.v") \
 	           $(shell find ../../ -path "*rtl/*.vh")

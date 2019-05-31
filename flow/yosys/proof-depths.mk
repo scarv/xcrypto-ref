@@ -44,6 +44,25 @@ $(SMTDIR)/instr_pclmul_l_pw2.cov : BMC_STEPS=21
 $(SMTDIR)/instr_pclmul_l_pw1.rpt : BMC_STEPS=37
 $(SMTDIR)/instr_pclmul_l_pw1.cov : BMC_STEPS=37
 
+$(SMTDIR)/instr_aesmix_dec.rpt      : BMC_STEPS=10
+$(SMTDIR)/instr_aesmix_enc.rpt      : BMC_STEPS=10
+$(SMTDIR)/instr_aessub_dec.rpt      : BMC_STEPS=10
+$(SMTDIR)/instr_aessub_decrot.rpt   : BMC_STEPS=10
+$(SMTDIR)/instr_aessub_enc.rpt      : BMC_STEPS=10
+$(SMTDIR)/instr_aessub_encrot.rpt   : BMC_STEPS=10
+$(SMTDIR)/instr_aesmix_dec.cov      : BMC_STEPS=10
+$(SMTDIR)/instr_aesmix_enc.cov      : BMC_STEPS=10
+$(SMTDIR)/instr_aessub_dec.cov      : BMC_STEPS=10
+$(SMTDIR)/instr_aessub_decrot.cov   : BMC_STEPS=10
+$(SMTDIR)/instr_aessub_enc.cov      : BMC_STEPS=10
+$(SMTDIR)/instr_aessub_encrot.cov   : BMC_STEPS=10
+
+$(SMTDIR)/instr_gather_b.rpt      : BMC_STEPS=10
+$(SMTDIR)/instr_gather_b.cov      : BMC_STEPS=10
+
+$(SMTDIR)/instr_scatter_b.rpt     : BMC_STEPS=10
+$(SMTDIR)/instr_scatter_b.cov     : BMC_STEPS=10
+
 $(SMTDIR)/instr_init.rpt     : BMC_STEPS=21
 $(SMTDIR)/instr_init.cov     : BMC_STEPS=21
 

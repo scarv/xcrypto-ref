@@ -44,7 +44,7 @@ output wire [31:0]  palu_cpr_rd_wdata  // Writeback data
 
 // Purely combinatoral block.
 assign palu_idone = palu_ivalid &&
-                    (is_mul ? mul_done : 1'b1);
+                    (is_mul ? pmul_done : 1'b1);
 
 // Detect which subclass of instruction to execute.
 wire is_mov_insn  = 
@@ -174,90 +174,110 @@ wire is_psll_i  = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PSLL_I];
 wire is_psrl_i  = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PSRL_I];
 wire is_prot_i  = is_parith_insn && id_subclass[SCARV_COP_SCLASS_PROT_I];
 
-wire [31:0] result_parith;
-    
-wire [31:0] padd_a ;  // LHS input
-wire [31:0] padd_b ;  // RHS input
-wire        padd_sub; // Do subtract instead of add.
-wire        padd_ci;  // Carry in
-wire [31:0] padd_c ;  // Result
-wire        padd_co;  // Carry out
+wire [4:0]  pw = {
+    id_pw == SCARV_COP_PW_16,
+    id_pw == SCARV_COP_PW_8 ,
+    id_pw == SCARV_COP_PW_4 ,
+    id_pw == SCARV_COP_PW_2 ,
+    id_pw == SCARV_COP_PW_1  
+};
 
-wire        mul_start ; // Trigger to start multiplying
-wire        mul_done  ; // Signal multiplication has finished.
-wire        mul_hi    ; // Want high part of result
-wire        mul_ncarry; // Do carryless multiplication.
-wire [31:0] mul_a     ; // LHS operand
-wire [31:0] mul_b     ; // RHS operand
-wire [31:0] mul_result; // Result of the multiplication.
-    
-wire [31:0] pshf_a    ; // LHS input
-wire [ 5:0] pshf_shamt; // RHS input
-wire        pshf_sl   ; // shift left / n shift right
-wire        pshf_r    ; // rotate / n shift
-wire [31:0] pshf_c    ; // Result
+wire [31:0] padd_lhs        ; // Left hand input
+wire [31:0] padd_rhs        ; // Right hand input.
+wire [ 0:0] padd_sub        ; // Subtract if set, else add.
+wire [31:0] padd_c_out      ; // Carry bits
+wire [31:0] padd_result     ; // Result of the operation
 
-assign padd_a = palu_rs1;
-assign padd_b = palu_rs2;
+wire [ 4:0] pshf_shamt      ; // Shift amount (immediate or source register 2)
+wire        pshf_shift      ; // Shift left/right
+wire        pshf_rotate     ; // Rotate left/right
+wire        pshf_left       ; // Shift/roate left
+wire        pshf_right      ; // Shift/rotate right
+wire [31:0] pshf_result     ; // Operation result
 
-assign mul_a       = palu_rs1;
-assign mul_b       = palu_rs2;
-assign mul_hi      = is_pmul_h || is_pclmul_h;
-assign mul_ncarry  = is_pclmul_l || is_pclmul_h;
-assign mul_start   = is_mul && is_parith_insn;
+wire        pmul_done       ; // Packed multiply finished.
+wire        pmul_valid      ; // Input is valid
+wire [ 0:0] pmul_ready      ; // Output is ready
+wire        pmul_mul_l      ; // Low half of result?
+wire        pmul_mul_h      ; // High half of result?
+wire        pmul_clmul      ; // Do a carryless multiply?
+wire [31:0] pmul_result     ; // [Carryless] multiply result
+wire [31:0] pmul_padd_lhs   ; // Left hand input
+wire [31:0] pmul_padd_rhs   ; // Right hand input.
+wire [ 4:0] pmul_padd_pw    ; // Pack width to operate on
+wire [ 0:0] pmul_padd_sub   ; // Subtract if set, else add.
 
+assign padd_lhs     = pmul_valid ? pmul_padd_lhs    : palu_rs1  ;
+assign padd_rhs     = pmul_valid ? pmul_padd_rhs    : palu_rs2  ;
+assign padd_sub     = pmul_valid ? pmul_padd_sub    : is_psub   ;
+
+wire   is_shift     = is_psll   || is_psrl   || is_prot     || is_psll_i   ||
+                      is_psrl_i || is_prot_i ;
 wire   shift_imm    = is_psll_i || is_psrl_i || is_prot_i;
-assign pshf_a       = palu_rs1;
-assign pshf_shamt   = shift_imm ? {1'b0,id_imm[4:0]  } :
-                                  {1'b0,palu_rs2[4:0]} ;
-assign pshf_r       = is_prot || is_prot_i;
-assign pshf_sl      = is_psll || is_psll_i;
+assign pshf_shift   = is_psll   || is_psrl   || is_psll_i   || is_psrl_i    ;
+assign pshf_rotate  = is_prot   || is_prot_i ;
+assign pshf_left    = is_psll   || is_psll_i ;
+assign pshf_right   = is_psrl   || is_psrl_i || pshf_rotate;
+assign pshf_shamt   = shift_imm ?  id_imm[4:0] : palu_rs2[4:0];
 
-assign padd_ci      = is_psub;
-assign padd_sub     = is_psub;
+wire   is_mul       = is_pmul_l  || is_pmul_h   || is_pclmul_l || is_pclmul_h;
+assign pmul_valid   = is_mul;
+assign pmul_clmul   = is_pclmul_l|| is_pclmul_h;
+assign pmul_mul_l   = is_pmul_l  || is_pclmul_l;
+assign pmul_mul_h   = is_pmul_h  || is_pclmul_h;
+assign pmul_done    = pmul_valid && pmul_ready;
 
-wire is_mul     = is_pmul_l || is_pmul_h || is_pclmul_l || is_pclmul_h ;
+wire [31:0] result_parith = 
+    {32{is_mul  }} & pmul_result  |
+    {32{is_padd }} & padd_result  |
+    {32{is_psub }} & padd_result  |
+    {32{is_shift}} & pshf_result  ;
 
-wire is_shift   = is_psll   || is_psrl   || is_prot     || is_psll_i   ||
-                  is_psrl_i || is_prot_i ;
-
-assign result_parith =
-    {32{is_mul  }} & mul_result   |
-    {32{is_padd }} & padd_c       |
-    {32{is_psub }} & padd_c       |
-    {32{is_shift}} & pshf_c       ;
-
-
-scarv_cop_palu_adder i_palu_adder(
-.a  (padd_a ),  // LHS input
-.b  (padd_b ),  // RHS input
-.pw (id_pw  ),  // Current operation pack width
-.sub(padd_sub), // Do subtract instead of add.
-.ci (padd_ci),  // Carry in
-.c  (padd_c ),  // Result
-.co (padd_co)   // Carry out
+//
+// Packed add/subtract
+p_addsub i_p_addsub(
+.lhs   (padd_lhs   ), // Left hand input
+.rhs   (padd_rhs   ), // Right hand input.
+.pw    (     pw    ), // Pack width to operate on
+.sub   (padd_sub   ), // Subtract if set, else add.
+.c_out (padd_c_out ), // Carry bits
+.result(padd_result)  // Result of the operation
 );
 
-scarv_cop_palu_shifter i_palu_shifter (
-.a    (pshf_a    ), // LHS input
-.shamt(pshf_shamt), // RHS input
-.pw   (id_pw     ), // Current operation pack width
-.sl   (pshf_sl   ), // shift left / n shift right
-.r    (pshf_r    ), // rotate / n shift
-.c    (pshf_c    )  // Result
+//
+// Packed Shift/Rotate
+p_shfrot i_p_shfrot(
+.crs1  (palu_rs1   ), // Source register 1
+.shamt (pshf_shamt ), // Shift amount (immediate or source register 2)
+.pw    (     pw    ), // Pack width to operate on
+.shift (pshf_shift ), // Shift left/right
+.rotate(pshf_rotate), // Rotate left/right
+.left  (pshf_left  ), // Shift/roate left
+.right (pshf_right ), // Shift/rotate right
+.result(pshf_result)  // Operation result
 );
 
-scarv_cop_palu_multiplier i_palu_multiplier (
-.g_clk   (g_clk     ), // Global clock.
-.g_resetn(g_resetn  ), // Global synchronous active low reset
-.start   (mul_start ), // Trigger to start multiplying
-.done    (mul_done  ), // Signal multiplication has finished.
-.a       (mul_a     ), // LHS operand
-.b       (mul_b     ), // RHS operand
-.pw      (id_pw     ), // Pack width.
-.high    (mul_hi    ),
-.ncarry  (mul_ncarry),
-.result  (mul_result)  // Result of the multiplication.
+
+//
+// Packed [carryless] multiply
+p_mul_core i_p_mul_core(
+.clock      (g_clk           ),
+.resetn     (g_resetn        ),
+.valid      (pmul_valid      ), // Input is valid
+.ready      (pmul_ready      ), // Output is ready
+.mul_l      (pmul_mul_l      ), // Low half of result?
+.mul_h      (pmul_mul_h      ), // High half of result?
+.clmul      (pmul_clmul      ), // Do a carryless multiply?
+.pw         (     pw         ), // Pack width specifier
+.crs1       (palu_rs1        ), // Source register 1
+.crs2       (palu_rs2        ), // Source register 2
+.result     (pmul_result     ), // [Carryless] multiply result
+.padd_lhs   (pmul_padd_lhs   ), // Left hand input
+.padd_rhs   (pmul_padd_rhs   ), // Right hand input.
+.padd_pw    (pmul_padd_pw    ), // Pack width to operate on
+.padd_sub   (pmul_padd_sub   ), // Subtract if set, else add.
+.padd_carry (padd_c_out      ), // Carry bits
+.padd_result(padd_result     )  // Result of the operation
 );
 
 endmodule

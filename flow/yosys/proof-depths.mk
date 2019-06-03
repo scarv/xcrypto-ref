@@ -8,23 +8,23 @@
 $(SMTDIR)/instr_bop.rpt     : BMC_STEPS=6
 $(SMTDIR)/instr_bop.cov     : BMC_STEPS=6
 
-$(SMTDIR)/instr_pmul_h.rpt     : BMC_STEPS=13
-$(SMTDIR)/instr_pmul_h.cov     : BMC_STEPS=13
+$(SMTDIR)/instr_pmul_h.rpt     : BMC_STEPS=16
+$(SMTDIR)/instr_pmul_h.cov     : BMC_STEPS=16
 
-$(SMTDIR)/instr_pmul_h_pw2.rpt : BMC_STEPS=21
-$(SMTDIR)/instr_pmul_h_pw2.cov : BMC_STEPS=21
+$(SMTDIR)/instr_pmul_h_pw2.rpt : BMC_STEPS=23
+$(SMTDIR)/instr_pmul_h_pw2.cov : BMC_STEPS=23
 
-$(SMTDIR)/instr_pmul_h_pw1.rpt : BMC_STEPS=37
-$(SMTDIR)/instr_pmul_h_pw1.cov : BMC_STEPS=37
+$(SMTDIR)/instr_pmul_h_pw1.rpt : BMC_STEPS=39
+$(SMTDIR)/instr_pmul_h_pw1.cov : BMC_STEPS=39
 
 $(SMTDIR)/instr_pmul_l.rpt     : BMC_STEPS=16
 $(SMTDIR)/instr_pmul_l.cov     : BMC_STEPS=16
 
-$(SMTDIR)/instr_pmul_l_pw2.rpt : BMC_STEPS=21
-$(SMTDIR)/instr_pmul_l_pw2.cov : BMC_STEPS=21
+$(SMTDIR)/instr_pmul_l_pw2.rpt : BMC_STEPS=23
+$(SMTDIR)/instr_pmul_l_pw2.cov : BMC_STEPS=23
 
-$(SMTDIR)/instr_pmul_l_pw1.rpt : BMC_STEPS=37
-$(SMTDIR)/instr_pmul_l_pw1.cov : BMC_STEPS=37
+$(SMTDIR)/instr_pmul_l_pw1.rpt : BMC_STEPS=39
+$(SMTDIR)/instr_pmul_l_pw1.cov : BMC_STEPS=39
 
 $(SMTDIR)/instr_pclmul_h.rpt     : BMC_STEPS=16
 $(SMTDIR)/instr_pclmul_h.cov     : BMC_STEPS=16

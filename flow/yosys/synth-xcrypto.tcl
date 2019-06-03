@@ -18,4 +18,11 @@ synth -top scarv_cop_top
 tee -o $::env(XC_WORK)/synth-statistics.rpt stat -width
 
 # Write out the synthesised verilog
+write_verilog $::env(XC_WORK)/synth-cells.v
+
+dfflibmap -liberty $::env(YOSYS_ROOT)/techlibs/common/cells.lib
+abc -liberty $::env(YOSYS_ROOT)/examples/cmos/cmos_cells.lib
+tee -o $::env(XC_WORK)/synth-gates.rpt stat
+
 write_verilog $::env(XC_WORK)/synth.v
+
